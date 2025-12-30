@@ -24,7 +24,7 @@ O roteiro segue as etapas abaixo:
 
 > COMING SOON
 
-## 🎨 Prototipagem e Design (UI/UX)
+## Prototipagem e Design (UI/UX)
 
 A interface do usuário e a experiência de navegação foram projetadas utilizando a plataforma **Figma**. O desenvolvimento visual utilizou como base o *design system* ["Mobile Apps – Prototyping Kit (Community)"](https://www.figma.com/community/file/1129468881607079432).
 
