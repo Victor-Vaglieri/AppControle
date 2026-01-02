@@ -1,0 +1,15 @@
+- login
+☐ - bill.xml
+☐ - config.xml
+☑ - home.xml
+☐ - investments.xml
+☑ - login.xml
+☐ - notifications.xml
+☐ - payment_method_home.xml
+☐ - payment_method_home_create.xml
+☐ - payment_method_home_edit.xml
+☐ - payment_method_list.xml
+☐ - reports.xml
+☐ - simulator.xml
+☐ - spent_create.xml
+☐ - spent_view.xml
