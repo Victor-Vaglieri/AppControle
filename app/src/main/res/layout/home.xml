@@ -1,6 +1,273 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/neutral_light_lightest">
 
+    <include
+        android:id="@+id/topBar"
+        layout="@layout/component_top_bar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingBottom="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topBar">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <HorizontalScrollView
+                android:id="@+id/scrollChips"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingHorizontal="24dp"
+                android:scrollbars="none"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_button_primary"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="8dp"
+                        android:text="TODOS"
+                        android:textColor="@color/neutral_light_lightest"
+                        android:textStyle="bold"
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/bg_input"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="8dp"
+                        android:text="VISA CRÉDITO"
+                        android:textColor="@color/highlight_darkest"
+                        android:textSize="12sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/bg_input"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="8dp"
+                        android:text="VISA DÉBITO"
+                        android:textColor="@color/highlight_darkest"
+                        android:textSize="12sp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineCenter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
+
+            <View
+                android:id="@+id/dividerVertical"
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:background="@color/neutral_light_dark"
+                app:layout_constraintBottom_toBottomOf="@+id/valInvestido"
+                app:layout_constraintEnd_toEndOf="@+id/guidelineCenter"
+                app:layout_constraintStart_toStartOf="@+id/guidelineCenter"
+                app:layout_constraintTop_toTopOf="@+id/labelInvestido" />
+
+            <TextView
+                android:id="@+id/labelInvestido"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="16dp"
+                android:text="Investido"
+                android:textColor="@color/neutral_light_dark"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/dividerVertical"
+                app:layout_constraintTop_toBottomOf="@+id/scrollChips" />
+
+            <TextView
+                android:id="@+id/valInvestido"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                tools:text="R$ 3.000,00"
+                android:textColor="@color/neutral_light_darkest"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/labelInvestido"
+                app:layout_constraintEnd_toStartOf="@+id/dividerVertical"
+                app:layout_constraintTop_toBottomOf="@+id/labelInvestido" />
+
+            <TextView
+                android:id="@+id/labelSaldo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="24dp"
+
+                android:text="Saldo total"
+                android:gravity="end"
+
+                android:textColor="@color/neutral_dark_lightest"
+                android:textSize="14sp"
+                app:layout_constraintStart_toEndOf="@+id/dividerVertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/labelInvestido" />
+
+            <TextView
+                android:id="@+id/valSaldo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+
+                tools:text="R$ 4.250,00"
+                android:gravity="end"
+
+                android:textColor="@color/neutral_dark_darkest"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/dividerVertical"
+                app:layout_constraintEnd_toEndOf="@+id/labelSaldo"
+                app:layout_constraintBottom_toBottomOf="@+id/valInvestido"
+                app:layout_constraintTop_toTopOf="@+id/valInvestido" />
+
+            <TextView
+                android:id="@+id/labelLimit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginStart="24dp"
+                android:text="Limite de crédito"
+                android:textColor="@color/neutral_dark_darkest"
+                android:textSize="10sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/valInvestido" />
+
+            <ProgressBar
+                android:id="@+id/progressBarLimit"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="0dp"
+                android:layout_height="12dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginHorizontal="24dp"
+
+                android:max="100"
+                android:progress="50"
+
+                android:progressDrawable="@drawable/progress_bar_custom"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/labelLimit" />
+
+            <TextView
+                android:id="@+id/txtLimitPercentage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="4dp"
+                tools:text="50%"
+                android:textColor="@color/neutral_dark_medium"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/progressBarLimit"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/txtLimitValues"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="24dp"
+                tools:text="2.250,00 / 5.500,00"
+                android:textColor="@color/neutral_dark_medium"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/progressBarLimit" />
+
+            <TextView
+                android:id="@+id/titleOptions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginStart="24dp"
+                android:text="Opções"
+                android:textColor="@color/neutral_dark_darkest"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtLimitValues" />
+
+            <LinearLayout
+                android:id="@+id/containerOptions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="24dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/titleOptions">
+
+                <include
+                    android:id="@+id/optAddExpense"
+                    layout="@layout/item_option_row" />
+                <include
+                    android:id="@+id/optSimulator"
+                    layout="@layout/item_option_row" />
+                <include
+                    android:id="@+id/optInvestments"
+                    layout="@layout/item_option_row" />
+                <include
+                    android:id="@+id/optPayment"
+                    layout="@layout/item_option_row" />
+                <include
+                    android:id="@+id/optReports"
+                    layout="@layout/item_option_row" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/titleRecent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginStart="24dp"
+                android:text="Últimos gastos (TODOS)"
+                android:textColor="@color/neutral_dark_darkest"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/containerOptions" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvRecentExpenses"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingHorizontal="24dp"
+                tools:itemCount="2"
+                tools:listitem="@layout/item_option_row"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/titleRecent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
