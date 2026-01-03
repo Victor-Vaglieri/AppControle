@@ -4,30 +4,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
-    <ImageView
-        android:id="@+id/iconOption"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        tools:src="@android:drawable/ic_menu_camera"
-        app:tint="@color/highlight_darkest"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
-        android:id="@+id/textOption"
+        android:id="@+id/tvExpenseTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        tools:text="Texto Exemplo"
+        tools:text="Gasto X"
         android:textColor="@color/neutral_dark_darkest"
         android:textSize="16sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/tvExpenseSubtitle"
+        app:layout_constraintEnd_toStartOf="@+id/iconChevron"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/tvExpenseSubtitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        tools:text="192,23 x 3"
+        android:textColor="@color/neutral_dark_light"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/iconChevron"
-        app:layout_constraintStart_toEndOf="@+id/iconOption"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvExpenseTitle" />
 
     <ImageView
         android:id="@+id/iconChevron"

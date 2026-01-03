@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="OptionItemView">
+        <attr name="cvTitle" format="string" />
+        <attr name="cvIcon" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="ExpenseItemView">
+        <attr name="expenseTitle" format="string" />
+        <attr name="expenseSubtitle" format="string" />
+    </declare-styleable>
+</resources>
