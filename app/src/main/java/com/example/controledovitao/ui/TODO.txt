@@ -1,0 +1,6 @@
++ aqui devo manipular tudo para a UI então não focar em criar muitos componentes em layout
++ deixei as pastas criadas mas acho que não precisa
++
+
++ para cada feature acho bom fazer: modelar os dados -> UI/ ->  data/ -> viewmodel/
++

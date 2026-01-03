@@ -1,0 +1,4 @@
++ aqui considera uma entrada limpa e transmite os dados
++ todas as regras de negocio
+
++ aqui vale apena depurar mais e testar
