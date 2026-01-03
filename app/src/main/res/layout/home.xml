@@ -230,7 +230,7 @@
                 android:paddingHorizontal="24dp"
                 app:layout_constraintTop_toBottomOf="@+id/titleOptions">
 
-                <com.example.controledovitao.views.OptionItemView
+                <com.example.controledovitao.components.OptionItemView
                     android:id="@+id/optAddExpense"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -238,7 +238,7 @@
                     app:cvIcon="@drawable/icon_add_spent"
                     app:cvTitle="Adicionar gasto" />
 
-                <com.example.controledovitao.views.OptionItemView
+                <com.example.controledovitao.components.OptionItemView
                     android:id="@+id/optSimulator"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -246,7 +246,7 @@
                     app:cvIcon="@drawable/icon_simulator"
                     app:cvTitle="Simulador Invest" />
 
-                <com.example.controledovitao.views.OptionItemView
+                <com.example.controledovitao.components.OptionItemView
                     android:id="@+id/optInvestments"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -254,7 +254,7 @@
                     app:cvIcon="@drawable/icon_invests"
                     app:cvTitle="Investimentos" />
 
-                <com.example.controledovitao.views.OptionItemView
+                <com.example.controledovitao.components.OptionItemView
                     android:id="@+id/optPayment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -262,7 +262,7 @@
                     app:cvIcon="@drawable/icon_payment"
                     app:cvTitle="Meios de pagamento" />
 
-                <com.example.controledovitao.views.OptionItemView
+                <com.example.controledovitao.components.OptionItemView
                     android:id="@+id/optReports"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -296,7 +296,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/titleRecent">
 
-                <com.example.controledovitao.views.ExpenseItemView
+                <com.example.controledovitao.components.ExpenseItemView
                     android:id="@+id/expense1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -304,7 +304,7 @@
                     app:expenseTitle="Gasto X"
                     app:expenseSubtitle="192,23 x 3" />
 
-                <com.example.controledovitao.views.ExpenseItemView
+                <com.example.controledovitao.components.ExpenseItemView
                     android:id="@+id/expense2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -312,7 +312,7 @@
                     app:expenseTitle="Mercado Extra"
                     app:expenseSubtitle="R$ 450,00" />
 
-                <com.example.controledovitao.views.ExpenseItemView
+                <com.example.controledovitao.components.ExpenseItemView
                     android:id="@+id/expense3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
