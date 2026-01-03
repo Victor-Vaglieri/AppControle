@@ -1,4 +1,4 @@
-package com.example.controledovitao.components
+package com.example.controledovitao.ui.components
 
 
 import android.content.Context
@@ -18,20 +18,15 @@ class ExpenseItemView @JvmOverloads constructor(
     private val tvSubtitle: TextView
 
     init {
-        // 1. Infla o layout NOVO
         LayoutInflater.from(context).inflate(R.layout.item_expense_row, this, true)
-
-        // 2. Define visual (Fundo e Padding)
         setBackgroundResource(R.drawable.bg_card_surface)
 
         val padding = (16 * resources.displayMetrics.density).toInt()
         setPadding(padding, padding, padding, padding)
 
-        // 3. Pega referências
         tvTitle = findViewById(R.id.tvExpenseTitle)
         tvSubtitle = findViewById(R.id.tvExpenseSubtitle)
 
-        // 4. Lê os atributos
         attrs?.let {
             val typedArray = context.obtainStyledAttributes(it, R.styleable.ExpenseItemView)
 
