@@ -4,48 +4,57 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.example.controledovitao.databinding.LoginBinding
+import com.example.controledovitao.viewmodel.LoginViewModel
 
+
+// UI/LoginActivity.kt -> viewmodel/LoginViewModel.kt -> data/repository/AuthRepository.kt
 class LoginActivity : AppCompatActivity() {
-
-    // 1. Criar a variável do Binding (A "ponte" para o XML)
-    // O nome "ActivityLoginBinding" é gerado automático baseado no nome do XML (activity_login.xml)
     private lateinit var binding: LoginBinding
+    private lateinit var viewModel: LoginViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = LoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        viewModel = ViewModelProvider(this)[LoginViewModel::class.java]
+
+        setupObservers()
+
+        setupListeners()
+
+    }
+
+    private fun setupListeners() {
         binding.btnLogin.setOnClickListener {
-            realizarLogin()
+            val login = binding.etLogin.text.toString().trim()
+            val password = binding.etPassword.text.toString().trim()
+
+            viewModel.doLogin(login, password)
         }
 
+        // TODO colocar acesso via digital
         binding.tvFingerprint.setOnClickListener {
             Toast.makeText(this, "Funcionalidade de Digital em breve!", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun realizarLogin() {
-        val login = binding.etLogin.text.toString().trim()
-        val password = binding.etPassword.text.toString().trim()
-
-        if (login.isEmpty()) {
-            binding.etLogin.error = "Preencha o login"
-            binding.etLogin.requestFocus()
-            return
+    private fun setupObservers() {
+        viewModel.loginSuccess.observe(this) { success ->
+            if (success) {
+                abrirHome()
+            }
         }
 
-        if (password.isEmpty()) {
-            binding.etPassword.error = "Preencha a senha"
-            binding.etPassword.requestFocus()
-            return
-        }
+        viewModel.errorMessage.observe(this) { message ->
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 
-        if (login == "admin" && password == "1234") {
-            abrirHome()
-        } else {
-            Toast.makeText(this, "Login ou senha incorretos", Toast.LENGTH_SHORT).show()
+            if (message.contains("Preencha")) {
+                binding.etLogin.requestFocus()
+            }
         }
     }
 
