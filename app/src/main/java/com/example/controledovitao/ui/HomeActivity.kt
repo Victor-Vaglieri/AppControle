@@ -3,44 +3,56 @@ package com.example.controledovitao.ui
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.example.controledovitao.databinding.HomeBinding
+import com.example.controledovitao.viewmodel.HomeViewModel
+import java.math.BigDecimal
+import java.util.Objects.toString
 
 class HomeActivity : AppCompatActivity() {
-
-    // Cria o vínculo com o layout activity_home.xml
     private lateinit var binding: HomeBinding
+
+    private lateinit var viewModel: HomeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // 1. Infla o layout
         binding = HomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 2. Configurar os cliques e interações
-        setupTopBar()
-        setupOptions()
+        viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
+
+        TopBarHelper.setupTopBar(this, binding)
+
+        setupBalance()
         setupChips()
+        setupOptions()
+
     }
 
-    private fun setupTopBar() {
-        // COMO ACESSAR O <INCLUDE>:
-        // Como você deu o id "@+id/topBar" no XML da Home, o ViewBinding cria uma variável 'topBar'.
-        // Dentro dela, você acessa os itens do componente (btnConfig, btnHome, etc).
+    private fun setupBalance() {
+        // TODO mudar para viewModel
+        var invest:BigDecimal  = BigDecimal("0")
+        var balance:BigDecimal = BigDecimal("0")
+        var valueProgress:Int = 0
+        var limit: BigDecimal = BigDecimal("0")
+        var usage: BigDecimal = limit * BigDecimal(toString(valueProgress))
+        var rest: BigDecimal = limit - usage
 
-        binding.topBar.btnConfig.setOnClickListener {
-            Toast.makeText(this, "Abrir Configurações", Toast.LENGTH_SHORT).show()
-        }
+        binding.valInvestido.setText(toString(invest))
+        binding.valSaldo.setText(toString(balance))
+        binding.progressBarLimit.setProgress(valueProgress)
+        binding.txtLimitPercentage.setText("${valueProgress}%")
+        binding.txtLimitValues.setText("${usage} / ${rest}")
+    }
 
-        binding.topBar.btnHome.setOnClickListener {
-            // Opcional: Recarregar a página ou rolar para o topo
-            Toast.makeText(this, "Já estamos na Home", Toast.LENGTH_SHORT).show()
-        }
+    private fun setupChips() {
+    // TODO ja fazer com viewModel
     }
 
     private fun setupOptions() {
-        // Configurando cliques nos seus componentes personalizados (OptionItemView)
 
+        // TODO fazer as telas
         binding.optAddExpense.setOnClickListener {
             Toast.makeText(this, "Clicou em Adicionar Gasto", Toast.LENGTH_SHORT).show()
             // Futuramente: startActivity(Intent(this, AddExpenseActivity::class.java))
@@ -54,17 +66,11 @@ class HomeActivity : AppCompatActivity() {
             Toast.makeText(this, "Clicou em Investimentos", Toast.LENGTH_SHORT).show()
         }
 
-        // Exemplo de clique num item da lista de gastos recentes
+
         binding.expense1.setOnClickListener {
             Toast.makeText(this, "Detalhes do Gasto X", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun setupChips() {
-        // Apenas um exemplo visual para os botões de filtro (Todos, Visa, etc)
-        // Aqui você acessa os TextViews que estão dentro do HorizontalScrollView
 
-        // Dica: Como eles não tem ID no seu XML, se quiser dar clique neles,
-        // volte no XML e adicione android:id="@+id/btnChipTodos", etc.
-    }
 }
