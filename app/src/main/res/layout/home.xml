@@ -305,21 +305,6 @@
                     app:expenseTitle="Gasto X"
                     app:expenseSubtitle="192,23 x 3" />
 
-                <com.example.controledovitao.ui.components.ExpenseItemView
-                    android:id="@+id/expense2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
-                    app:expenseTitle="Mercado Extra"
-                    app:expenseSubtitle="R$ 450,00" />
-
-                <com.example.controledovitao.ui.components.ExpenseItemView
-                    android:id="@+id/expense3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
-                    app:expenseTitle="Uber Trip"
-                    app:expenseSubtitle="R$ 24,90" />
 
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>

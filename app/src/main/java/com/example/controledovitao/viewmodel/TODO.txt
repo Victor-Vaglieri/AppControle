@@ -1,6 +1,0 @@
-
-+ aqui serve para manter dados ja que não altera a interação do usuario
-+ filtrar os erros (da UI/) e limitações (da DATA/)
-+ impedir acesso da data com erros
-
-+ deixar essa parte por ultimo
