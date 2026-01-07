@@ -12,6 +12,7 @@ class ExpenseItemView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
+
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
     private val tvTitle: TextView
@@ -39,4 +40,12 @@ class ExpenseItemView @JvmOverloads constructor(
             typedArray.recycle()
         }
     }
+    fun setExpenseTitle(title: String) {
+        tvTitle.text = title
+    }
+
+    fun setExpenseSubtitle(subtitle: String) {
+        tvSubtitle.text = subtitle
+    }
+
 }

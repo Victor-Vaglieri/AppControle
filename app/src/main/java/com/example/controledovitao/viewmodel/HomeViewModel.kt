@@ -3,10 +3,81 @@ package com.example.controledovitao.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.controledovitao.data.repository.AuthRepository
+import com.example.controledovitao.data.repository.OverviewRepository
+import java.math.BigDecimal
+import android.util.Log
+import java.text.NumberFormat
+import java.util.Locale
 
 
-// TODO completo
-class HomeViewModel : ViewModel(){
+class HomeViewModel : ViewModel() {
+
+    private val repository = OverviewRepository()
+
+    private val _getInfosSuccess = MutableLiveData<Boolean>()
+    val getInfosSuccess: LiveData<Boolean> = _getInfosSuccess
+
+    var invest: BigDecimal = BigDecimal.ZERO
+        private set
+    var balance: BigDecimal = BigDecimal.ZERO
+        private set
+    var limit: BigDecimal = BigDecimal.ZERO
+        private set
+    var usage: BigDecimal = BigDecimal.ZERO
+        private set
+
+    private val _spentItems =
+        MutableLiveData<List<Pair<String, String>>>()
+
+    val spentItems: LiveData<List<Pair<String, String>>> = _spentItems
+
+    private val _errorMessage = MutableLiveData<String>()
+    val errorMessage: LiveData<String> = _errorMessage
+
+    init {
+        findBalance()
+        findSpents()
+    }
+
+    private fun findBalance() {
+        val resposta = repository.getBalance()
+
+        if (resposta.isNotEmpty()) {
+            _getInfosSuccess.value = true
+            invest = resposta[0]
+            balance = resposta[1]
+            limit = resposta[2]
+            usage = resposta[3]
+        } else {
+            _errorMessage.value = "Erro ao acessar os valores"
+        }
+    }
+
+    private fun correctString(number: BigDecimal): String {
+        // TODO pegar coin de uma config
+        val coin = "R$"
+        return NumberFormat.getNumberInstance(Locale.of("pt", "BR")).format(number)
+    }
+
+    private fun findSpents() {
+        val spents = repository.getSpents()
+        if (spents.isNotEmpty()) {
+            val result = spents.map { spent ->
+                val title = spent.name
+
+                val subtitle = if (spent.times != null && spent.times > 1) {
+                    "${correctString(spent.value)} x ${spent.times}"
+                } else {
+                    correctString(spent.value)
+                }
+
+                title to subtitle
+            }
+
+            _spentItems.value = result
+        } else {
+            _errorMessage.value = "Nenhum gasto encontrado"
+        }
+    }
 
 }

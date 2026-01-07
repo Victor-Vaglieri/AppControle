@@ -10,6 +10,7 @@ data class Payment(
     var usage: BigDecimal?,
     var bestDate: Int?,
     var shutdown: Int?,
+    var spent: List<Spent>
 )
 
 enum class Options(val op: String) {
@@ -17,3 +18,9 @@ enum class Options(val op: String) {
     DEBIT("debit"),
     MONEY("money")
 }
+
+data class Spent(
+    val name: String,
+    val value: BigDecimal,
+    val times: Int?
+)
