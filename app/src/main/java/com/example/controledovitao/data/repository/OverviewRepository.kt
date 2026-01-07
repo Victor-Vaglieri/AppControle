@@ -4,38 +4,125 @@ import com.example.controledovitao.data.model.Overview
 import com.example.controledovitao.data.model.Payment
 import com.example.controledovitao.data.model.Invest
 import com.example.controledovitao.data.model.Options
+import com.example.controledovitao.data.model.Spent
 import java.math.BigDecimal
+import java.time.LocalDate
+import java.time.Period
 
 class OverviewRepository {
 
     // TODO puxar da nuvem e deixar na memoria
     private val fakePayment = listOf(
-        Payment("Visa Crédito", Options.CREDIT,  BigDecimal(3000),  BigDecimal(2000),BigDecimal(1000),23, 1),
-        Payment("Visa Débito", Options.DEBIT,  BigDecimal(3000),  null,  null, null, null),
-        Payment("Master Crédito", Options.CREDIT,  BigDecimal(1500),  BigDecimal(500), BigDecimal(0),8,  15),
-        Payment("Master Débito", Options.DEBIT,  BigDecimal(10.54),  null,  null, null, null),
-        Payment("PIX", Options.MONEY,  BigDecimal(23.40),  null,  null, null, null)
+        Payment(
+            "Visa Crédito",
+            Options.CREDIT,
+            BigDecimal("3000"),
+            BigDecimal("2000"),
+            BigDecimal("1000"),
+            23,
+            1,
+            listOf(
+                Spent(
+                    name = "Almoço",
+                    value = BigDecimal("35.00"),
+                    times = 2
+                ),
+                Spent(
+                    name = "Uber",
+                    value = BigDecimal("18.50"),
+                    times = null
+                )
+            )
+        ),
+        Payment(
+            "Visa Débito",
+            Options.DEBIT,
+            BigDecimal("3000"),
+            null,
+            null,
+            null,
+            null,
+            emptyList()
+        ),
+        Payment(
+            "Master Crédito",
+            Options.CREDIT,
+            BigDecimal("1500"),
+            BigDecimal("500"),
+            BigDecimal.ZERO,
+            8,
+            15,
+            emptyList()
+        ),
+        Payment(
+            "Master Débito",
+            Options.DEBIT,
+            BigDecimal("10.54"),
+            null,
+            null,
+            null,
+            null,
+            emptyList()
+        ),
+        Payment(
+            "PIX",
+            Options.MONEY,
+            BigDecimal("23.40"),
+            null,
+            null,
+            null,
+            null,
+            emptyList()
+        )
     )
 
-    // TODO deixar na memoria, ao inicializar coletar as infos e toda mudança atualizar
-    private val fakeOverview = Overview(BigDecimal(0),BigDecimal(0),BigDecimal(0),emptyList(),emptyList())
-
-
     // TODO puxar da nuvem e deixar na memoria (talvez)
-    // TODO criar fake invest
+    private val fakeInvest = listOf(
+        Invest(
+            "Poupança",
+            BigDecimal("1000"),
+            Period.between(
+                LocalDate.of(2025, 1, 1),
+                LocalDate.of(2026, 1, 1)
+            ),
+            BigDecimal("100")
+        ),
+        Invest(
+            "BitCoin",
+            BigDecimal("1000"),
+            Period.between(
+                LocalDate.of(2025, 1, 1),
+                LocalDate.of(2026, 1, 1)
+            ),
+            BigDecimal("280")
+        )
+    )
 
-    fun getOverview(): List<BigDecimal> {
+    fun getBalance(): List<BigDecimal> {
 
-        val balance = fakePayment.sumOf { it.balance }
-        fakeOverview.totalBalance = balance
-        val limit = fakePayment.sumOf { it.limit ?: BigDecimal(0.0)}
-        fakeOverview.totalLimit = limit
+        val totalBalance = fakePayment.fold(BigDecimal.ZERO) { acc, payment ->
+            acc.add(payment.balance)
+        }
 
-        val usage = fakePayment.sumOf { it.usage ?: BigDecimal(0.0)}
+        val totalLimit = fakePayment.fold(BigDecimal.ZERO) { acc, payment ->
+            acc.add(payment.limit ?: BigDecimal.ZERO)
+        }
 
-        val invest = BigDecimal(0.0)
-        fakeOverview.totalInvest = invest
+        val totalUsage = fakePayment.fold(BigDecimal.ZERO) { acc, payment ->
+            acc.add(payment.usage ?: BigDecimal.ZERO)
+        }
 
-        return mutableListOf(fakeOverview.totalBalance,fakeOverview.totalLimit,usage)
+        val totalInvest = fakeInvest.fold(BigDecimal.ZERO) { acc, invest ->
+            acc.add(invest.value)
+        }
+
+        return listOf(
+            totalInvest,
+            totalBalance,
+            totalLimit,
+            totalUsage
+        )
     }
+    fun getSpents(): List<Spent> =
+        fakePayment.flatMap { it.spent ?: emptyList() }
 }
