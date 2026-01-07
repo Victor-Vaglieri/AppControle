@@ -1,16 +1,21 @@
 package com.example.controledovitao.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.controledovitao.databinding.HomeBinding
 import com.example.controledovitao.viewmodel.HomeViewModel
 import java.math.BigDecimal
-import java.util.Objects.toString
+import com.example.controledovitao.ui.components.ExpenseItemView
+
+import java.math.RoundingMode
+import java.text.NumberFormat
+import java.util.Locale
 
 class HomeActivity : AppCompatActivity() {
-    private lateinit var binding: HomeBinding
+    private lateinit var  binding: HomeBinding
 
     private lateinit var viewModel: HomeViewModel
 
@@ -23,36 +28,51 @@ class HomeActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
 
         TopBarHelper.setupTopBar(this, binding)
-
         setupBalance()
-        setupChips()
         setupOptions()
+        setupChips()
+    }
 
+    private fun correctString(number: BigDecimal, option: Boolean): String {
+        // TODO pegar coin de uma config
+        val coin = "R$"
+        val localeBR = Locale.of("pt", "BR")
+        val formatator = NumberFormat.getNumberInstance(localeBR)
+        val transform = formatator.format(number)
+        if (option){
+            return coin + " " + transform
+        } else {
+            return transform
+        }
     }
 
     private fun setupBalance() {
-        // TODO mudar para viewModel
-        var invest:BigDecimal  = BigDecimal("0")
-        var balance:BigDecimal = BigDecimal("0")
-        var valueProgress:Int = 0
-        var limit: BigDecimal = BigDecimal("0")
-        var usage: BigDecimal = limit * BigDecimal(toString(valueProgress))
-        var rest: BigDecimal = limit - usage
+        val invest: BigDecimal = viewModel.invest
+        val balance: BigDecimal = viewModel.balance
+        val limit: BigDecimal = viewModel.limit
+        val usage: BigDecimal = viewModel.usage
 
-        binding.valInvestido.setText(toString(invest))
-        binding.valSaldo.setText(toString(balance))
-        binding.progressBarLimit.setProgress(valueProgress)
-        binding.txtLimitPercentage.setText("${valueProgress}%")
-        binding.txtLimitValues.setText("${usage} / ${rest}")
-    }
+        val valueProgress = if (limit.compareTo(BigDecimal.ZERO) == 0) {
+            0
+        } else {
+                usage.divide(limit, 2, RoundingMode.HALF_UP)
+                .multiply(BigDecimal("100"))
+                .toInt()
+        }
 
-    private fun setupChips() {
-    // TODO ja fazer com viewModel
+        val rest: BigDecimal = limit.subtract(usage)
+
+        binding.valInvestido.text = correctString(invest, true)
+        binding.valSaldo.text = correctString(balance, true)
+        binding.progressBarLimit.progress = valueProgress
+        binding.txtLimitPercentage.text = "$valueProgress%"
+        binding.txtLimitValues.text =
+            "${correctString(usage, false)} / ${correctString(limit, false)}"
     }
 
     private fun setupOptions() {
 
-        // TODO fazer as telas
+        // TODO fazer as telas, por enquanto deixar assim
         binding.optAddExpense.setOnClickListener {
             Toast.makeText(this, "Clicou em Adicionar Gasto", Toast.LENGTH_SHORT).show()
             // Futuramente: startActivity(Intent(this, AddExpenseActivity::class.java))
@@ -67,8 +87,22 @@ class HomeActivity : AppCompatActivity() {
         }
 
 
-        binding.expense1.setOnClickListener {
-            Toast.makeText(this, "Detalhes do Gasto X", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun setupChips() {
+        viewModel.spentItems.observe(this) { items ->
+
+            binding.containerRecentExpenses.removeAllViews()
+
+            items.forEachIndexed { index, (title, subtitle) ->
+
+                val view = ExpenseItemView(this).apply {
+                    setExpenseTitle(title)
+                    setExpenseSubtitle(subtitle)
+                }
+
+                binding.containerRecentExpenses.addView(view)
+            }
         }
     }
 

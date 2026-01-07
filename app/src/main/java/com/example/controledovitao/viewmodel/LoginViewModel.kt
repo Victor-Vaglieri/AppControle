@@ -11,7 +11,6 @@ class LoginViewModel : ViewModel() {
 
     private val _loginSuccess = MutableLiveData<Boolean>()
     val loginSuccess: LiveData<Boolean> = _loginSuccess
-
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = _errorMessage
 
