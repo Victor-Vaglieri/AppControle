@@ -1,17 +1,13 @@
 package com.example.controledovitao.data.repository
 
-import com.example.controledovitao.data.model.Overview
-import com.example.controledovitao.data.model.Payment
-import com.example.controledovitao.data.model.Invest
 import com.example.controledovitao.data.model.Options
+import com.example.controledovitao.data.model.Payment
 import com.example.controledovitao.data.model.Spent
 import java.math.BigDecimal
 import java.time.LocalDate
-import java.time.Period
 
-class OverviewRepository {
+class SpentRepository {
 
-    // TODO puxar da nuvem e deixar na memoria
     private val fakePayment = listOf(
         Payment(
             "Visa Crédito",
@@ -78,53 +74,27 @@ class OverviewRepository {
         )
     )
 
-    // TODO puxar da nuvem e deixar na memoria (talvez)
-    private val fakeInvest = listOf(
-        Invest(
-            "Poupança",
-            BigDecimal("1000"),
-            Period.between(
-                LocalDate.of(2025, 1, 1),
-                LocalDate.of(2026, 1, 1)
-            ),
-            BigDecimal("100")
-        ),
-        Invest(
-            "BitCoin",
-            BigDecimal("1000"),
-            Period.between(
-                LocalDate.of(2025, 1, 1),
-                LocalDate.of(2026, 1, 1)
-            ),
-            BigDecimal("280")
-        )
-    )
-
-    fun getBalance(): List<BigDecimal> {
-
-        val totalBalance = fakePayment.fold(BigDecimal.ZERO) { acc, payment ->
-            acc.add(payment.balance)
-        }
-
-        val totalLimit = fakePayment.fold(BigDecimal.ZERO) { acc, payment ->
-            acc.add(payment.limit ?: BigDecimal.ZERO)
-        }
-
-        val totalUsage = fakePayment.fold(BigDecimal.ZERO) { acc, payment ->
-            acc.add(payment.usage ?: BigDecimal.ZERO)
-        }
-
-        val totalInvest = fakeInvest.fold(BigDecimal.ZERO) { acc, invest ->
-            acc.add(invest.value)
-        }
-
-        return listOf(
-            totalInvest,
-            totalBalance,
-            totalLimit,
-            totalUsage
-        )
+    fun getMethods(): List<Payment> {
+        return fakePayment
     }
-    fun getSpents(): List<Spent> =
-        fakePayment.flatMap { it.spent ?: emptyList() }
+
+    fun save(title: String, method: String, value: BigDecimal, installments: Int, date: Long): Boolean {
+
+        // 1. Cria o objeto Spent novo
+        val newSpent = Spent(
+            name = title,
+            value = value,
+            times = installments,
+            spentDate = date
+        )
+
+        val paymentFound = fakePayment.find { it.name == method }
+
+        if (paymentFound != null) {
+            paymentFound.spent.add(newSpent)
+            println("Gasto salvo no FAKE DB: $newSpent em $method")
+            return true
+        }
+        return false
+    }
 }
