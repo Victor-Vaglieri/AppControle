@@ -8,11 +8,16 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.controledovitao.databinding.LoginBinding
 import com.example.controledovitao.viewmodel.LoginViewModel
 
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricPrompt
+import androidx.core.content.ContextCompat
 
-// UI/LoginActivity.kt -> viewmodel/LoginViewModel.kt -> data/repository/AuthRepository.kt
+
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: LoginBinding
     private lateinit var viewModel: LoginViewModel
+
+    private var jaLogin = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +26,9 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         viewModel = ViewModelProvider(this)[LoginViewModel::class.java]
+        if (jaLogin){
+            tentarLoginBiometrico()
+        }
 
         setupObservers()
 
@@ -36,10 +44,62 @@ class LoginActivity : AppCompatActivity() {
             viewModel.doLogin(login, password)
         }
 
-        // TODO colocar acesso via digital
         binding.tvFingerprint.setOnClickListener {
-            Toast.makeText(this, "Funcionalidade de Digital em breve!", Toast.LENGTH_SHORT).show()
+            tentarLoginBiometrico()
         }
+    }
+
+    private fun tentarLoginBiometrico() {
+        val biometricManager = BiometricManager.from(this)
+
+        when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
+            BiometricManager.BIOMETRIC_SUCCESS -> {
+                mostrarDialogoBiometria()
+            }
+            BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE -> {
+                Toast.makeText(this, "Seu aparelho não tem sensor de biometria", Toast.LENGTH_SHORT).show()
+            }
+            BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
+                Toast.makeText(this, "Nenhuma digital cadastrada nas configurações", Toast.LENGTH_LONG).show()
+            }
+            else -> {
+                Toast.makeText(this, "Biometria indisponível no momento", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun mostrarDialogoBiometria() {
+
+        val executor = ContextCompat.getMainExecutor(this)
+
+        // 3. O Callback: O que fazer quando der certo ou errado
+        val callback = object : BiometricPrompt.AuthenticationCallback() {
+            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                super.onAuthenticationSucceeded(result)
+                Toast.makeText(applicationContext, "Autenticado com sucesso!", Toast.LENGTH_SHORT).show()
+                jaLogin = true
+                abrirHome()
+            }
+
+            override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                super.onAuthenticationError(errorCode, errString)
+                Toast.makeText(applicationContext, "Erro: $errString", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onAuthenticationFailed() {
+                super.onAuthenticationFailed()
+            }
+        }
+
+        val biometricPrompt = BiometricPrompt(this, executor, callback)
+
+        val promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle("Login no Controle do Vitão")
+            .setSubtitle("Use sua digital para entrar")
+            .setNegativeButtonText("Usar senha")
+            .build()
+
+        biometricPrompt.authenticate(promptInfo)
     }
 
     private fun setupObservers() {

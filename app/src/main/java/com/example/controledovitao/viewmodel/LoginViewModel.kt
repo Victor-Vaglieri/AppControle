@@ -24,6 +24,7 @@ class LoginViewModel : ViewModel() {
 
         if (isValid) {
             _loginSuccess.value = true
+
         } else {
             _errorMessage.value = "Login ou senha incorretos"
         }

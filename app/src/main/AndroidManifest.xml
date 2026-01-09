@@ -22,6 +22,11 @@
             android:name=".ui.HomeActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.SpentCreateActivity"
+            android:exported="false" />
+
+
     </application>
 
 </manifest>
