@@ -2,6 +2,8 @@
 ☐ - bill.xml
 ☐ - config.xml
 ☑ - home.xml
+    ☐ - criar config que acessa tipo de moeda (ViewModel, Activity)
+    ☐ - pegar os metodos de pagamento e coloca-los nas opções abaixo de topBar
 ☐ - investments.xml
 ☑ - login.xml
 ☐ - notifications.xml
@@ -11,5 +13,5 @@
 ☐ - payment_method_list.xml
 ☐ - reports.xml
 ☐ - simulator.xml
-☐ - spent_create.xml
+☑ - spent_create.xml
 ☐ - spent_view.xml

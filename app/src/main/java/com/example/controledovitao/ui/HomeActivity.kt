@@ -1,7 +1,7 @@
 package com.example.controledovitao.ui
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -27,9 +27,9 @@ class HomeActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
 
-        TopBarHelper.setupTopBar(this, binding)
+        TopBarHelper.setupTopBar(this, binding.topBar)
         setupBalance()
-        setupOptions()
+        setupOptionsAndMethods()
         setupChips()
     }
 
@@ -70,26 +70,74 @@ class HomeActivity : AppCompatActivity() {
             "${correctString(usage, false)} / ${correctString(limit, false)}"
     }
 
-    private fun setupOptions() {
+    private fun setupOptionsAndMethods() {
 
-        // TODO fazer as telas, por enquanto deixar assim
         binding.optAddExpense.setOnClickListener {
             Toast.makeText(this, "Clicou em Adicionar Gasto", Toast.LENGTH_SHORT).show()
-            // Futuramente: startActivity(Intent(this, AddExpenseActivity::class.java))
+            openAddSpent()
         }
 
         binding.optSimulator.setOnClickListener {
             Toast.makeText(this, "Clicou em Simulador", Toast.LENGTH_SHORT).show()
+            openSimulatorInvest()
         }
 
         binding.optInvestments.setOnClickListener {
             Toast.makeText(this, "Clicou em Investimentos", Toast.LENGTH_SHORT).show()
+            openInvest()
         }
 
+        binding.optPayment.setOnClickListener {
+            Toast.makeText(this, "Clicou em Pagamentos", Toast.LENGTH_SHORT).show()
+            openPayment()
+        }
+
+        binding.optReports.setOnClickListener {
+            Toast.makeText(this, "Clicou em Relatórios", Toast.LENGTH_SHORT).show()
+            openReports()
+        }
+
+        // TODO adicionar os metodos de pagamentos "methods" na estrutura "scrollChips", porem as paginas serão por navegação dinamica
 
     }
 
+    private fun openAddSpent() {
+        val intent = Intent(this, SpentCreateActivity::class.java)
+        startActivity(intent)
+        setupBalance()
+        setupChips()
+    }
+    private fun openSimulatorInvest() {
+        val intent = Intent(this, SimulatorInvestActivity::class.java)
+        startActivity(intent)
+        setupBalance()
+        setupChips()
+    }
+
+    private fun openInvest() {
+        val intent = Intent(this, investsActivity::class.java)
+        startActivity(intent)
+        setupBalance()
+        setupChips()
+    }
+
+    private fun openPayment() {
+        val intent = Intent(this, paymentsActivity::class.java)
+        startActivity(intent)
+        setupBalance()
+        setupChips()
+    }
+
+    private fun openReports() {
+        val intent = Intent(this, reportsActivity::class.java)
+        startActivity(intent)
+        setupBalance()
+        setupChips()
+    }
+
+
     private fun setupChips() {
+        // TODO por listener em todos (AFFFFF)
         viewModel.spentItems.observe(this) { items ->
 
             binding.containerRecentExpenses.removeAllViews()
