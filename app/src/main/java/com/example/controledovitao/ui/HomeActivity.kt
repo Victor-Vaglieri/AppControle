@@ -60,7 +60,6 @@ class HomeActivity : AppCompatActivity() {
                 .toInt()
         }
 
-        val rest: BigDecimal = limit.subtract(usage)
 
         binding.valInvestido.text = correctString(invest, true)
         binding.valSaldo.text = correctString(balance, true)
