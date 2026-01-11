@@ -30,6 +30,10 @@
             android:name=".ui.ConfigActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.NotificationsActivity"
+            android:exported="false" />
+
 
     </application>
 

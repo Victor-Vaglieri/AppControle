@@ -4,7 +4,6 @@ import android.net.Uri
 
 class ConfigRepository {
 
-    // --- LEITURA (Simulação) ---
     fun getUserName(): String {
         return "Victor Vaglieri de Oliveira" // Simulado
         // return sharedPreferences.getString("user_name", "")

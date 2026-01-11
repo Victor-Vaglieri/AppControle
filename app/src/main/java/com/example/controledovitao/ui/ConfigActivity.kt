@@ -66,8 +66,8 @@ class ConfigActivity : AppCompatActivity() {
         }
 
         binding.btnNotifications.setOnClickListener {
-            Toast.makeText(this, "Abrir configurações de notificação", Toast.LENGTH_SHORT).show()
-            // TODO fazer a pagina de notificações
+            val intent = Intent(this, NotificationsActivity::class.java)
+            startActivity(intent)
         }
 
         binding.cardProfile.setOnClickListener {

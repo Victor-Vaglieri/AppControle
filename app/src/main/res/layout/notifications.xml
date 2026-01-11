@@ -1,6 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/neutral_light_lightest"
+    android:fitsSystemWindows="true">
 
+    <include
+        android:id="@+id/topBar"
+        layout="@layout/component_top_bar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topBar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Configurações"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:textColor="@color/neutral_dark_darkest" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchPush"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Notificações Push"
+                android:checked="true"
+                android:thumb="@drawable/switch_thumb_selector"
+                app:track="@drawable/switch_track_selector" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Notificações E-mail"
+                android:checked="false"
+                android:thumb="@drawable/switch_thumb_selector"
+                app:track="@drawable/switch_track_selector" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="16dp"
+                android:text="Últimas notificações"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:textColor="@color/neutral_dark_darkest" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerNotifications"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                tools:listitem="@layout/item_notification" />
+
+        </LinearLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
