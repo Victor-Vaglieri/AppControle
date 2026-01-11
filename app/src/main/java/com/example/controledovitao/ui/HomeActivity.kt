@@ -1,5 +1,6 @@
 package com.example.controledovitao.ui
 
+import com.example.controledovitao.R
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -28,6 +29,7 @@ class HomeActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
 
         TopBarHelper.setupTopBar(this, binding.topBar)
+        setupMethods()
         setupBalance()
         setupOptionsAndMethods()
         setupChips()
@@ -67,6 +69,70 @@ class HomeActivity : AppCompatActivity() {
         binding.txtLimitPercentage.text = "$valueProgress%"
         binding.txtLimitValues.text =
             "${correctString(usage, false)} / ${correctString(limit, false)}"
+    }
+
+
+
+    private var selectedFilter: String = "TODOS"
+    private fun setupMethods() {
+        val container = binding.containerFilter
+        container.removeAllViews()
+
+        val listaNomes = mutableListOf("TODOS")
+        listaNomes.addAll(viewModel.methods)
+
+        listaNomes.forEach { nomeMetodo ->
+
+            val chip = android.widget.TextView(this)
+
+            chip.text = nomeMetodo.uppercase()
+            chip.textSize = 12f
+            chip.typeface = android.graphics.Typeface.DEFAULT_BOLD
+
+            val padH = dpToPx(20)
+            val padV = dpToPx(8)
+            chip.setPadding(padH, padV, padH, padV)
+
+            val params = android.widget.LinearLayout.LayoutParams(
+                android.widget.LinearLayout.LayoutParams.WRAP_CONTENT,
+                android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            params.marginEnd = dpToPx(8)
+            chip.layoutParams = params
+
+            // Listener AQUI
+            chip.setOnClickListener {
+                selectedFilter = nomeMetodo
+                atVisualMethos()
+
+                // Trocar para pagina de review de cada metodo
+                // if (todos) home
+                Toast.makeText(this, "Filtro: $nomeMetodo", Toast.LENGTH_SHORT).show()
+            }
+            container.addView(chip)
+        }
+        atVisualMethos()
+    }
+
+    private fun atVisualMethos() {
+        val container = binding.containerFilter
+
+        for (i in 0 until container.childCount) {
+            val child = container.getChildAt(i) as android.widget.TextView
+            val textoChip = child.text.toString()
+
+            if (textoChip.equals(selectedFilter, ignoreCase = true)) {
+                child.setBackgroundResource(R.drawable.bg_filter_active)
+                child.setTextColor(getColor(R.color.neutral_light_lightest))
+            } else {
+                child.setBackgroundResource(R.drawable.bg_filter_inactive)
+                child.setTextColor(getColor(R.color.highlight_darkest))
+            }
+        }
+    }
+
+    private fun dpToPx(dp: Int): Int {
+        return (dp * resources.displayMetrics.density).toInt()
     }
 
     private fun setupOptionsAndMethods() {
@@ -114,21 +180,21 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun openInvest() {
-        val intent = Intent(this, investsActivity::class.java)
+        val intent = Intent(this, InvestsActivity::class.java)
         startActivity(intent)
         setupBalance()
         setupChips()
     }
 
     private fun openPayment() {
-        val intent = Intent(this, paymentsActivity::class.java)
+        val intent = Intent(this, PaymentsActivity::class.java)
         startActivity(intent)
         setupBalance()
         setupChips()
     }
 
     private fun openReports() {
-        val intent = Intent(this, reportsActivity::class.java)
+        val intent = Intent(this, ReportsActivity::class.java)
         startActivity(intent)
         setupBalance()
         setupChips()

@@ -78,6 +78,10 @@ class OverviewRepository {
         )
     )
 
+    fun getMethods(): List<Payment> {
+        return fakePayment
+    }
+
     // TODO puxar da nuvem e deixar na memoria (talvez)
     private val fakeInvest = listOf(
         Invest(
