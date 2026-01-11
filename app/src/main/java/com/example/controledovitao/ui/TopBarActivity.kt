@@ -10,7 +10,14 @@ object TopBarHelper {
     fun setupTopBar(activity: Activity, topBarBinding: ComponentTopBarBinding) {
 
         topBarBinding.btnConfig.setOnClickListener {
-            Toast.makeText(activity, "Abrir Configurações", Toast.LENGTH_SHORT).show()
+            if (activity is ConfigActivity) {
+                Toast.makeText(activity, "Já estamos na Configurações", Toast.LENGTH_SHORT).show()
+            } else {
+                val intent = Intent(activity, ConfigActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                activity.startActivity(intent)
+                activity.finish()
+            }
         }
 
         topBarBinding.btnHome.setOnClickListener {

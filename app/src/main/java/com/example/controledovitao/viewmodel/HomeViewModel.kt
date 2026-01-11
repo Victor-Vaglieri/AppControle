@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.controledovitao.data.repository.OverviewRepository
 import java.math.BigDecimal
-import android.util.Log
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -18,6 +17,9 @@ class HomeViewModel : ViewModel() {
     val getInfosSuccess: LiveData<Boolean> = _getInfosSuccess
 
     var invest: BigDecimal = BigDecimal.ZERO
+        private set
+
+    var methods: List<String> = emptyList()
         private set
     var balance: BigDecimal = BigDecimal.ZERO
         private set
@@ -37,6 +39,17 @@ class HomeViewModel : ViewModel() {
     init {
         findBalance()
         findSpents()
+        findMethods()
+    }
+
+    private fun findMethods() {
+        val aux = repository.getMethods()
+        if (aux.isNotEmpty()) {
+            methods = aux.map { item -> item.name }
+            _getInfosSuccess.value = true
+        } else {
+            _errorMessage.value = "Nenhum método de pagamento encontrado"
+        }
     }
 
     private fun findBalance() {
