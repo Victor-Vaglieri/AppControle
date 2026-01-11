@@ -1,9 +1,12 @@
 - login
 ☐ - bill.xml
-☐ - config.xml
+☑ - config.xml
+    ☐ - configurar para mudar a imagem
+    ☐ - configurar para salvar as configurações na memoria interna
+    ☐ - confirmar toda lista de configurações apos terminar a aplicação
 ☑ - home.xml
     ☐ - criar config que acessa tipo de moeda (ViewModel, Activity)
-    ☐ - pegar os metodos de pagamento e coloca-los nas opções abaixo de topBar
+    ☑ - pegar os metodos de pagamento e coloca-los nas opções abaixo de topBar
 ☐ - investments.xml
 ☑ - login.xml
 ☐ - notifications.xml

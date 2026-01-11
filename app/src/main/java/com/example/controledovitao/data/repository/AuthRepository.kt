@@ -6,8 +6,8 @@ class AuthRepository {
 
     // TODO trocar para um arquivo na nuvem
     private val fakeDatabase = listOf(
-        User("admin", "1234", "Victor"),
-        User("convidado", "0000", "Visitante")
+        User("admin", "1234", "Victor", "teste123@gmail.com"),
+        User("convidado", "0000", "Visitante", "teste123@gmail.com")
     )
 
     fun login(login: String, pass: String): Boolean {

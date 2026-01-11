@@ -87,6 +87,7 @@ class OverviewRepository {
         Invest(
             "Poupança",
             BigDecimal("1000"),
+            System.currentTimeMillis(),
             Period.between(
                 LocalDate.of(2025, 1, 1),
                 LocalDate.of(2026, 1, 1)
@@ -96,6 +97,7 @@ class OverviewRepository {
         Invest(
             "BitCoin",
             BigDecimal("1000"),
+            System.currentTimeMillis(),
             Period.between(
                 LocalDate.of(2025, 1, 1),
                 LocalDate.of(2026, 1, 1)
