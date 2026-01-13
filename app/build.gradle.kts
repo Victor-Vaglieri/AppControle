@@ -50,6 +50,7 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
     implementation("androidx.biometric:biometric-ktx:1.2.0-alpha05")
 }
