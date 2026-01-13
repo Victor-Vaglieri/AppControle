@@ -9,7 +9,7 @@
     ☑ - pegar os metodos de pagamento e coloca-los nas opções abaixo de topBar
 ☐ - investments.xml
 ☑ - login.xml
-☐ - notifications.xml
+☑ - notifications.xml
 ☐ - payment_method_home.xml
 ☐ - payment_method_home_create.xml
 ☐ - payment_method_home_edit.xml
