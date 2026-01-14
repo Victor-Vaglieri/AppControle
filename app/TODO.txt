@@ -1,4 +1,5 @@
-- login
+☑ - login
+    ☐ - adicionar uma imagem condizente
 ☐ - bill.xml
 ☑ - config.xml
     ☐ - configurar para mudar a imagem
@@ -6,6 +7,7 @@
     ☐ - confirmar toda lista de configurações apos terminar a aplicação
 ☑ - home.xml
     ☐ - criar config que acessa tipo de moeda (ViewModel, Activity)
+    ☐ - Corrigir os CorrectStrings()
     ☑ - pegar os metodos de pagamento e coloca-los nas opções abaixo de topBar
 ☐ - investments.xml
 ☑ - login.xml
@@ -14,7 +16,9 @@
 ☐ - payment_method_home_create.xml
 ☐ - payment_method_home_edit.xml
 ☐ - payment_method_list.xml
-☐ - reports.xml
+☑ - reports.xml
+    ☐ - adicionar o repository
+    ☐ - consertar os graficos
 ☐ - simulator.xml
 ☑ - spent_create.xml
-☐ - spent_view.xml
+☑ - spent_view.xml

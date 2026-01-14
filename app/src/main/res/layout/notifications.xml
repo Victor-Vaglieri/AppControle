@@ -38,6 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Notificações Push"
+                android:textSize="16sp"
                 android:checked="true"
                 android:thumb="@drawable/switch_thumb_selector"
                 app:track="@drawable/switch_track_selector" />
@@ -47,6 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:textSize="16sp"
                 android:text="Notificações E-mail"
                 android:checked="false"
                 android:thumb="@drawable/switch_thumb_selector"
