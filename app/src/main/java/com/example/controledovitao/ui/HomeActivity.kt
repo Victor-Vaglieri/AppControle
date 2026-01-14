@@ -36,15 +36,21 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun correctString(number: BigDecimal, option: Boolean): String {
-        // TODO pegar coin de uma config
-        val coin = "R$"
         val localeBR = Locale.of("pt", "BR")
         val formatator = NumberFormat.getNumberInstance(localeBR)
+
+        formatator.minimumFractionDigits = 2
+        formatator.maximumFractionDigits = 2
+
         val transform = formatator.format(number)
-        if (option){
-            return coin + " " + transform
+
+        // TODO: idealmente pegar "R$" de uma config ou currency.symbol
+        val coin = "R$"
+
+        return if (option) {
+            "$coin $transform"
         } else {
-            return transform
+            transform
         }
     }
 
@@ -202,16 +208,22 @@ class HomeActivity : AppCompatActivity() {
 
 
     private fun setupChips() {
-        // TODO por listener em todos (AFFFFF)
         viewModel.spentItems.observe(this) { items ->
 
             binding.containerRecentExpenses.removeAllViews()
 
-            items.forEachIndexed { index, (title, subtitle) ->
+            items.forEachIndexed { index, (title,subtitle,item) ->
 
                 val view = ExpenseItemView(this).apply {
                     setExpenseTitle(title)
                     setExpenseSubtitle(subtitle)
+                }
+                view.setOnClickListener {
+                    val intent = Intent(this, SpentViewActivity::class.java)
+
+                    intent.putExtra("EXTRA_SPENT", item)
+
+                    startActivity(intent)
                 }
 
                 binding.containerRecentExpenses.addView(view)

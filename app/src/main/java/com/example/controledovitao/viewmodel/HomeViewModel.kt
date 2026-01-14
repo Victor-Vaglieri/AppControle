@@ -3,6 +3,7 @@ package com.example.controledovitao.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.controledovitao.data.model.Spent
 import com.example.controledovitao.data.repository.OverviewRepository
 import java.math.BigDecimal
 import java.text.NumberFormat
@@ -29,9 +30,9 @@ class HomeViewModel : ViewModel() {
         private set
 
     private val _spentItems =
-        MutableLiveData<List<Pair<String, String>>>()
+        MutableLiveData<List<Triple<String, String, Spent>>>()
 
-    val spentItems: LiveData<List<Pair<String, String>>> = _spentItems
+    val spentItems: LiveData<List<Triple<String, String, Spent>>> = _spentItems
 
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = _errorMessage
@@ -67,9 +68,16 @@ class HomeViewModel : ViewModel() {
     }
 
     private fun correctString(number: BigDecimal): String {
-        // TODO pegar coin de uma config
-        val coin = "R$"
-        return NumberFormat.getNumberInstance(Locale.of("pt", "BR")).format(number)
+        val localeBR = Locale.of("pt", "BR")
+
+        val formatator = NumberFormat.getNumberInstance(localeBR)
+
+        formatator.minimumFractionDigits = 2
+        formatator.maximumFractionDigits = 2
+
+        val transform = formatator.format(number)
+
+        return transform
     }
 
     private fun findSpents() {
@@ -84,7 +92,7 @@ class HomeViewModel : ViewModel() {
                     correctString(spent.value)
                 }
 
-                title to subtitle
+                Triple(title, subtitle, spent)
             }
 
             _spentItems.value = result

@@ -48,7 +48,7 @@
                 android:layout_marginBottom="16dp"
                 android:text="Opções"
                 android:textColor="@color/neutral_dark_darkest"
-                android:textSize="16sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
             <!-- cOLOCAR borda -->
             <androidx.cardview.widget.CardView
@@ -78,30 +78,44 @@
                             android:text="Alerta de uso de limite"
                             android:textColor="@color/neutral_dark_dark"
                             android:textStyle="bold"
-                            android:textSize="12sp"/>
+                            android:textSize="16sp"/>
 
                         <ImageView
                             android:id="@+id/btnLimitMinus"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="@drawable/bg_circle_button"
+                            android:padding="8dp"
                             android:src="@drawable/icon_minus"
-                            app:tint="@color/highlight_darkest"/>
+                            app:tint="@color/highlight_darkest"
+                            app:layout_constraintEnd_toStartOf="@+id/inputValue"
+                            app:layout_constraintTop_toTopOf="@+id/btnValuePlus"
+                            app:layout_constraintBottom_toBottomOf="@+id/btnValuePlus"/>
+
 
                         <TextView
                             android:id="@+id/txtLimitValue"
                             android:layout_width="50dp"
                             android:layout_height="wrap_content"
                             android:gravity="center"
+                            android:textSize="18sp"
                             android:text="80%"
                             android:textColor="@color/neutral_dark_dark"
                             android:textStyle="bold"/>
 
                         <ImageView
                             android:id="@+id/btnLimitPlus"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:background="@drawable/bg_circle_button"
+                            android:padding="8dp"
                             android:src="@drawable/icon_plus"
-                            app:tint="@color/highlight_darkest"/>
+                            app:tint="@color/highlight_darkest"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/lblValue"
+                            app:layout_constraintBottom_toBottomOf="@+id/lblValue"/>
+
                     </LinearLayout>
 
                     <View
@@ -123,30 +137,43 @@
                             android:text="Dias"
                             android:textColor="@color/neutral_dark_dark"
                             android:textStyle="bold"
-                            android:textSize="12sp"/>
+                            android:textSize="16sp"/>
 
                         <ImageView
                             android:id="@+id/btnDaysMinus"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="@drawable/bg_circle_button"
+                            android:padding="8dp"
                             android:src="@drawable/icon_minus"
-                            app:tint="@color/highlight_darkest"/>
+                            app:tint="@color/highlight_darkest"
+                            app:layout_constraintEnd_toStartOf="@+id/inputValue"
+                            app:layout_constraintTop_toTopOf="@+id/btnValuePlus"
+                            app:layout_constraintBottom_toBottomOf="@+id/btnValuePlus"/>
 
                         <TextView
                             android:id="@+id/txtDaysValue"
                             android:layout_width="50dp"
                             android:layout_height="wrap_content"
                             android:gravity="center"
+                            android:textSize="18sp"
                             android:text="30"
                             android:textColor="@color/neutral_dark_dark"
                             android:textStyle="bold"/>
 
                         <ImageView
                             android:id="@+id/btnDaysPlus"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:background="@drawable/bg_circle_button"
+                            android:padding="8dp"
                             android:src="@drawable/icon_plus"
-                            app:tint="@color/highlight_darkest"/>
+                            app:tint="@color/highlight_darkest"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/lblValue"
+                            app:layout_constraintBottom_toBottomOf="@+id/lblValue"/>
+
                     </LinearLayout>
 
                 </LinearLayout>
@@ -164,6 +191,7 @@
                     android:layout_height="wrap_content"
                     android:text="Exportar em Excel"
                     android:textStyle="bold"
+                    android:textSize="16sp"
                     android:textColor="@color/neutral_dark_darkest"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -188,6 +216,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textSize="16sp"
                     android:text="Exportar em PDF"
                     android:textStyle="bold"
                     android:textColor="@color/neutral_dark_darkest"
