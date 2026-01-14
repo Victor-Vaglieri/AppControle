@@ -84,9 +84,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:textColor="@color/neutral_light_darkest"
-                android:textSize="20sp"
+                android:textSize="26sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/dividerVertical"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="@+id/labelInvestido"
                 app:layout_constraintTop_toBottomOf="@+id/labelInvestido"
                 tools:text="R$ 3.000,00" />
@@ -116,7 +117,7 @@
                 android:gravity="end"
                 android:textColor="@color/neutral_dark_darkest"
 
-                android:textSize="24sp"
+                android:textSize="32sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/valInvestido"
                 app:layout_constraintEnd_toEndOf="@+id/labelSaldo"
@@ -132,7 +133,7 @@
                 android:layout_marginTop="24dp"
                 android:text="Limite de crédito"
                 android:textColor="@color/neutral_dark_darkest"
-                android:textSize="10sp"
+                android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/valInvestido" />
 
@@ -158,6 +159,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="24dp"
+                android:textSize="14sp"
                 android:layout_marginBottom="4dp"
                 android:textColor="@color/neutral_dark_medium"
                 android:textStyle="bold"
@@ -172,7 +174,7 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="24dp"
                 android:textColor="@color/neutral_dark_medium"
-                android:textSize="10sp"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/progressBarLimit"
                 tools:text="2.250,00 / 5.500,00" />
