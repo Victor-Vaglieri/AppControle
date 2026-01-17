@@ -7,9 +7,10 @@
     ☐ - confirmar toda lista de configurações apos terminar a aplicação
 ☑ - home.xml
     ☐ - criar config que acessa tipo de moeda (ViewModel, Activity)
-    ☐ - Corrigir os CorrectStrings()
+    ☑ - Corrigir os CorrectStrings()
     ☑ - pegar os metodos de pagamento e coloca-los nas opções abaixo de topBar
-☐ - investments.xml
+☑ - investments.xml
+    ☐ - configurar os botoes de editar e lançar
 ☑ - login.xml
 ☑ - notifications.xml
 ☐ - payment_method_home.xml
@@ -18,7 +19,7 @@
 ☐ - payment_method_list.xml
 ☑ - reports.xml
     ☐ - adicionar o repository
-    ☐ - consertar os graficos
+    ☐ - consertar os graficos (aprender mexer nisso melhor)
 ☐ - simulator.xml
 ☑ - spent_create.xml
 ☑ - spent_view.xml
