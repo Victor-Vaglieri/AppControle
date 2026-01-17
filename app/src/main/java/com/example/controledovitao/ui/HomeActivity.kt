@@ -36,7 +36,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun correctString(number: BigDecimal, option: Boolean): String {
-        val localeBR = Locale.of("pt", "BR")
+        val localeBR = Locale("pt", "BR")
         val formatator = NumberFormat.getNumberInstance(localeBR)
 
         formatator.minimumFractionDigits = 2
@@ -168,8 +168,6 @@ class HomeActivity : AppCompatActivity() {
             openReports()
         }
 
-        // TODO adicionar os metodos de pagamentos "methods" na estrutura "scrollChips", porem as paginas serão por navegação dinamica
-
     }
 
     private fun openAddSpent() {
@@ -186,7 +184,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun openInvest() {
-        val intent = Intent(this, InvestsActivity::class.java)
+        val intent = Intent(this, InvestmentsActivity::class.java)
         startActivity(intent)
         setupBalance()
         setupChips()
@@ -207,16 +205,33 @@ class HomeActivity : AppCompatActivity() {
     }
 
 
+    private fun toSubtitle(value: BigDecimal, times: Int ): String{
+        val localeBR = Locale("pt", "BR")
+        val formatator = NumberFormat.getNumberInstance(localeBR)
+        formatator.minimumFractionDigits = 2
+        formatator.maximumFractionDigits = 2
+
+        val transform = formatator.format(value)
+        val subtitle = if (times != 0){
+            "${transform} x ${times}"
+        } else {
+            "${transform}"
+        }
+        return subtitle
+
+    }
+
+
     private fun setupChips() {
         viewModel.spentItems.observe(this) { items ->
 
             binding.containerRecentExpenses.removeAllViews()
 
-            items.forEachIndexed { index, (title,subtitle,item) ->
+            items.forEachIndexed { _, (title,values,item) ->
 
                 val view = ExpenseItemView(this).apply {
                     setExpenseTitle(title)
-                    setExpenseSubtitle(subtitle)
+                    setExpenseSubtitle(toSubtitle(values.first, values.second))
                 }
                 view.setOnClickListener {
                     val intent = Intent(this, SpentViewActivity::class.java)
