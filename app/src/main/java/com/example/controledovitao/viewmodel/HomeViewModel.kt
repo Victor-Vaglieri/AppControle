@@ -30,9 +30,9 @@ class HomeViewModel : ViewModel() {
         private set
 
     private val _spentItems =
-        MutableLiveData<List<Triple<String, String, Spent>>>()
+        MutableLiveData<List<Triple<String, Pair<BigDecimal,Int>, Spent>>>()
 
-    val spentItems: LiveData<List<Triple<String, String, Spent>>> = _spentItems
+    val spentItems: LiveData<List<Triple<String,  Pair<BigDecimal,Int>, Spent>>> = _spentItems
 
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = _errorMessage
@@ -67,18 +67,7 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    private fun correctString(number: BigDecimal): String {
-        val localeBR = Locale.of("pt", "BR")
 
-        val formatator = NumberFormat.getNumberInstance(localeBR)
-
-        formatator.minimumFractionDigits = 2
-        formatator.maximumFractionDigits = 2
-
-        val transform = formatator.format(number)
-
-        return transform
-    }
 
     private fun findSpents() {
         val spents = repository.getSpents()
@@ -87,9 +76,9 @@ class HomeViewModel : ViewModel() {
                 val title = spent.name
 
                 val subtitle = if (spent.times != null && spent.times > 1) {
-                    "${correctString(spent.value)} x ${spent.times}"
+                    Pair(spent.value,spent.times)
                 } else {
-                    correctString(spent.value)
+                    Pair(spent.value,0)
                 }
 
                 Triple(title, subtitle, spent)
