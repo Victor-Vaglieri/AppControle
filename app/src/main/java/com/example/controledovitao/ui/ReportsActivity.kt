@@ -38,7 +38,7 @@ class ReportsActivity : AppCompatActivity() {
         viewModel.limitAlert.observe(this) { value ->
             binding.txtLimitValue.text = "$value%"
         }
-        binding.btnLimitPlus.setOnClickListener { viewModel.changeLimit(5) } // Aumenta de 5 em 5
+        binding.btnLimitPlus.setOnClickListener { viewModel.changeLimit(5) }
         binding.btnLimitMinus.setOnClickListener { viewModel.changeLimit(-5) }
 
         viewModel.daysCount.observe(this) { value ->
