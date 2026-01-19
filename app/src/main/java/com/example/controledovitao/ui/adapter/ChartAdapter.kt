@@ -3,11 +3,15 @@ package com.example.controledovitao.ui.adapter
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.controledovitao.R
 import com.example.controledovitao.databinding.ItemChartBinding
+import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 
 data class ChartData(
     val month: String,
@@ -19,7 +23,15 @@ class ChartAdapter(private val items: List<ChartData>) : RecyclerView.Adapter<Ch
     inner class ChartViewHolder(val binding: ItemChartBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: ChartData) {
+            val context = binding.root.context
+
+            val colorPrimary = ContextCompat.getColor(context, R.color.highlight_darkest)
+            val colorText = ContextCompat.getColor(context, R.color.neutral_dark_darkest)
+            val colorGrid = ContextCompat.getColor(context, R.color.neutral_dark_dark)
+
             binding.tvMonth.text = item.month.uppercase()
+            binding.tvMonth.setTextColor(ContextCompat.getColor(context, R.color.neutral_light_lightest))
+            binding.tvMonth.setBackgroundColor(ContextCompat.getColor(context, R.color.highlight_darkest))
 
             val entries = ArrayList<BarEntry>()
             item.values.forEachIndexed { index, value ->
@@ -27,10 +39,7 @@ class ChartAdapter(private val items: List<ChartData>) : RecyclerView.Adapter<Ch
             }
 
             val dataSet = BarDataSet(entries, "Gastos")
-            // TODO ver cor
-            dataSet.color = Color.parseColor("#4285F4")
-            dataSet.valueTextColor = Color.WHITE
-            dataSet.valueTextSize = 10f
+            dataSet.color = colorPrimary
             dataSet.setDrawValues(false)
 
             val barData = BarData(dataSet)
@@ -38,22 +47,44 @@ class ChartAdapter(private val items: List<ChartData>) : RecyclerView.Adapter<Ch
 
             binding.barChart.apply {
                 data = barData
+
                 description.isEnabled = false
                 legend.isEnabled = false
+                isScaleXEnabled = false
+                isScaleYEnabled = false
+                setPinchZoom(false)
 
-                // Eixo X (Embaixo)
-                xAxis.setDrawGridLines(false)
-                xAxis.setDrawLabels(false)
-                xAxis.setDrawAxisLine(false)
+                xAxis.apply {
+                    position = XAxis.XAxisPosition.BOTTOM
+                    setDrawGridLines(false)
 
-                // Eixo Y (Direita - Desativa)
+                    textColor = colorText
+                    textSize = 12f
+
+                    axisLineColor = Color.TRANSPARENT
+
+                    valueFormatter = IndexAxisValueFormatter(listOf("Sem 1", "Sem 2", "Sem 3", "Sem 4", "Sem 5"))
+                    granularity = 1f
+                }
+
+                axisLeft.apply {
+                    isEnabled = true
+
+                    textColor = colorText
+                    textSize = 12f
+
+                    setDrawGridLines(true)
+                    gridColor = colorGrid
+
+                    axisLineColor = Color.TRANSPARENT
+                    setDrawAxisLine(false)
+                    axisMinimum = 0f
+                }
+
                 axisRight.isEnabled = false
 
-                // Eixo Y (Esquerda)
-                axisLeft.isEnabled = true
-                axisLeft.textColor = Color.WHITE
-                axisLeft.setDrawGridLines(true)
-                axisLeft.gridColor = Color.parseColor("#33FFFFFF")
+
+                extraBottomOffset = 16f
 
                 animateY(1000)
                 invalidate()

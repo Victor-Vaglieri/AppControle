@@ -19,7 +19,8 @@
 ☐ - payment_method_list.xml
 ☑ - reports.xml
     ☐ - adicionar o repository
-    ☐ - consertar os graficos (aprender mexer nisso melhor)
-☐ - simulator.xml
+    ☑ - consertar os graficos (aprender mexer nisso melhor)
+☑ - simulator.xml
+    ☐ - arrumar um elemento no layout/simulator.xml que não esta arredondado
 ☑ - spent_create.xml
 ☑ - spent_view.xml
