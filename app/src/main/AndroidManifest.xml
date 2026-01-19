@@ -46,6 +46,10 @@
             android:name=".ui.InvestmentsActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.SimulatorInvestActivity"
+            android:exported="false" />
+
 
     </application>
 

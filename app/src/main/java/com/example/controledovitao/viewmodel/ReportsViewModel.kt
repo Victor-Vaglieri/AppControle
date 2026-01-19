@@ -12,10 +12,10 @@ class ReportsViewModel : ViewModel() {
         ChartData("Dezembro", listOf(200f, 450f, 300f, 800f, 150f)),
         ChartData("Novembro", listOf(600f, 200f, 500f, 300f, 400f))
     )
-    private val _limitAlert = MutableLiveData(80) // Começa em 80%
+    private val _limitAlert = MutableLiveData(80)
     val limitAlert: LiveData<Int> = _limitAlert
 
-    private val _daysCount = MutableLiveData(30) // Começa em 30 dias
+    private val _daysCount = MutableLiveData(30)
     val daysCount: LiveData<Int> = _daysCount
 
     fun changeLimit(delta: Int) {
