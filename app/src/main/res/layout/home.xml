@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:background="@color/neutral_light_lightest">
-    <!-- não esquecer dessa bomba -->
+
     <include
         android:id="@+id/topBar"
         layout="@layout/component_top_bar"
