@@ -113,6 +113,8 @@
                     app:drawableStartCompat="@drawable/icon_left"
                     app:drawableTint="@color/highlight_darkest" />
 
+
+
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnConfirm"
                     android:layout_width="0dp"
