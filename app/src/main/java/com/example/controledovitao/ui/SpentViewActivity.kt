@@ -6,8 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.controledovitao.data.model.Spent
 import com.example.controledovitao.databinding.SpentViewBinding
 import java.text.NumberFormat
-import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 
 class SpentViewActivity : AppCompatActivity() {
@@ -39,7 +37,7 @@ class SpentViewActivity : AppCompatActivity() {
 
     private fun setupData(item: Spent) {
         binding.tvDetailItem.text = item.name
-        val localeBR = Locale.of("pt", "BR")
+        val localeBR = Locale("pt", "BR")
         val numberFormat = NumberFormat.getCurrencyInstance(localeBR)
         binding.tvDetailValue.text = numberFormat.format(item.value)
         binding.tvDetailTimes.text = item.times.toString()
