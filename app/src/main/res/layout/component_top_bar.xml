@@ -47,6 +47,7 @@
             android:background="@drawable/bg_status_dot"
             android:visibility="gone" />
 
+
     </LinearLayout>
 
     <ImageView
