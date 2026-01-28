@@ -29,9 +29,11 @@ class ReportsActivity : AppCompatActivity() {
     }
 
     private fun setupCharts() {
-        val adapter = ChartAdapter(viewModel.mockCharts)
-        binding.recyclerCharts.layoutManager = LinearLayoutManager(this)
-        binding.recyclerCharts.adapter = adapter
+        viewModel.charts.observe(this) { chartList ->
+            val adapter = ChartAdapter(chartList)
+            binding.recyclerCharts.layoutManager = LinearLayoutManager(this)
+            binding.recyclerCharts.adapter = adapter
+        }
     }
 
     private fun setupOptions() {
