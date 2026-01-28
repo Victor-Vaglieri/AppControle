@@ -17,14 +17,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-
-
     <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@android:drawable/ic_menu_gallery"
-        app:tint="@color/highlight_light"
+        android:id="@+id/ivLogo"
+        android:layout_width="500dp"
+        android:layout_height="500dp"
+        android:src="@drawable/logo"
+        android:contentDescription="Logo do Aplicativo"
         app:layout_constraintBottom_toBottomOf="@+id/viewTopBackground"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -45,6 +43,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/viewTopBackground"
         app:layout_constraintVertical_chainStyle="packed" />
+
     <EditText
         android:id="@+id/etLogin"
         android:layout_width="0dp"
@@ -100,15 +99,12 @@
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="32dp"
         android:layout_marginBottom="32dp"
-
         android:background="@drawable/bg_button_primary"
         app:backgroundTint="@null"
-
         android:text="Entrar"
         android:textAllCaps="false"
         android:textColor="@color/neutral_light_lightest"
         android:textStyle="bold"
-
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
