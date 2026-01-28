@@ -1,5 +1,5 @@
 ☑ - login
-    ☐ - adicionar uma imagem condizente
+    ☑ - adicionar uma imagem condizente
 ☐ - bill.xml
 ☑ - config.xml
     ☐ - configurar para mudar a imagem
@@ -18,7 +18,8 @@
 ☐ - payment_method_home_edit.xml
 ☐ - payment_method_list.xml
 ☑ - reports.xml
-    ☐ - adicionar o repository
+    ☐ - Mudar no ViewModel para pegar da memoria interna
+    ☑ - adicionar o repository
     ☑ - consertar os graficos (aprender mexer nisso melhor)
 ☑ - simulator.xml
     ☐ - arrumar um elemento no layout/simulator.xml que não esta arredondado
