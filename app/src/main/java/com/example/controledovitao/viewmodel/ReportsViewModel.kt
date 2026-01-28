@@ -3,20 +3,28 @@ package com.example.controledovitao.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.controledovitao.data.repository.ReportsRepository
 import com.example.controledovitao.ui.adapter.ChartData
 
 class ReportsViewModel : ViewModel() {
 
-    // TODO mandar isso para repository
-    val mockCharts = listOf(
-        ChartData("Dezembro", listOf(200f, 450f, 300f, 800f, 150f)),
-        ChartData("Novembro", listOf(600f, 200f, 500f, 300f, 400f))
-    )
+    private val repository = ReportsRepository()
+    private val _charts = MutableLiveData<List<ChartData>>()
+    val charts: LiveData<List<ChartData>> = _charts
+
     private val _limitAlert = MutableLiveData(80)
     val limitAlert: LiveData<Int> = _limitAlert
 
     private val _daysCount = MutableLiveData(30)
     val daysCount: LiveData<Int> = _daysCount
+
+    init {
+        loadCharts()
+    }
+
+    private fun loadCharts() {
+        _charts.value = repository.getCharts()
+    }
 
     fun changeLimit(delta: Int) {
         val current = _limitAlert.value ?: 0
