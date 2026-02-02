@@ -1,6 +1,7 @@
 ☑ - login
     ☑ - adicionar uma imagem condizente
 ☐ - bill.xml
+    ☐ - adicionar todo o processo de Activity,ViewModel e Repository
 ☑ - config.xml
     ☐ - configurar para mudar a imagem
     ☐ - configurar para salvar as configurações na memoria interna
@@ -14,9 +15,13 @@
 ☑ - login.xml
 ☑ - notifications.xml
 ☐ - payment_method_home.xml
-☐ - payment_method_home_create.xml
-☐ - payment_method_home_edit.xml
+    ☐ - adicionar todo o processo de Activity,ViewModel e Repository (paymentsActivity)
+☐ - payment_method_create.xml
+    ☐ - adicionar todo o processo de Activity,ViewModel e Repository
+☐ - payment_method_edit.xml
+    ☐ - adicionar todo o processo de Activity,ViewModel e Repository
 ☐ - payment_method_list.xml
+    ☐ - adicionar todo o processo de Activity,ViewModel e Repository
 ☑ - reports.xml
     ☐ - Mudar no ViewModel para pegar da memoria interna
     ☑ - adicionar o repository
