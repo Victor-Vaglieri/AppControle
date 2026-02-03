@@ -50,6 +50,23 @@
             android:name=".ui.SimulatorInvestActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.PaymentCreateActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.PaymentEditActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.PaymentListActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.PaymentsActivity"
+            android:exported="false" />
+
+
 
     </application>
 

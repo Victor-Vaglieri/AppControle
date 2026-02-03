@@ -11,7 +11,7 @@ import java.time.Period
 class OverviewRepository {
 
     // TODO puxar da nuvem e deixar na memoria
-    private val fakePayment = listOf(
+    private val fakePayment = mutableListOf(
         Payment(
             "Visa Crédito",
             Options.CREDIT,
@@ -79,6 +79,21 @@ class OverviewRepository {
 
     fun getMethods(): List<Payment> {
         return fakePayment
+    }
+
+    fun getMethodByName(name: String): Payment? {
+        return fakePayment.find { it.name == name }
+    }
+
+    fun addMethod(payment: Payment) {
+        fakePayment.add(payment)
+    }
+
+    fun updateMethod(oldName: String, updatedPayment: Payment) {
+        val index = fakePayment.indexOfFirst { it.name == oldName }
+        if (index != -1) {
+            fakePayment[index] = updatedPayment
+        }
     }
 
     // TODO puxar da nuvem e deixar na memoria (talvez)

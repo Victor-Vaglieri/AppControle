@@ -1,6 +1,34 @@
 package com.example.controledovitao.ui
 
-// TODO tudo aqui, precisa iniciar em payment_method_home caso clicar em editar ir para payment_method_list e caso para criar ir para payment_method_create
-// o do payment_method_list terá a lista de todos os metodos e ao clicar em um vai entrar payment_method_edit com as infos do metodo selecionado
-class PaymentsActivity {
+import android.content.Intent
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import com.example.controledovitao.databinding.PaymentMethodHomeBinding
+
+class PaymentsActivity : AppCompatActivity() {
+
+    private lateinit var binding: PaymentMethodHomeBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = PaymentMethodHomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        // Configura TopBar
+        TopBarHelper.setupTopBar(this, binding.topBar)
+
+        setupListeners()
+    }
+
+    private fun setupListeners() {
+        // Botão do Card "ADICIONAR"
+        binding.btnAdd.setOnClickListener {
+            startActivity(Intent(this, PaymentCreateActivity::class.java))
+        }
+
+        // Botão do Card "EDITAR" (Vai para a lista para escolher qual editar)
+        binding.btnEdit.setOnClickListener {
+            startActivity(Intent(this, PaymentListActivity::class.java))
+        }
+    }
 }
