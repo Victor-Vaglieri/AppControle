@@ -1,9 +1,8 @@
 package com.example.controledovitao.data.repository
 
-import com.example.controledovitao.data.model.Overview
-import com.example.controledovitao.data.model.Payment
 import com.example.controledovitao.data.model.Invest
 import com.example.controledovitao.data.model.Options
+import com.example.controledovitao.data.model.Payment
 import com.example.controledovitao.data.model.Spent
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -16,11 +15,11 @@ class OverviewRepository {
         Payment(
             "Visa Crédito",
             Options.CREDIT,
-            BigDecimal("3000"),
-            BigDecimal("2000"),
-            BigDecimal("1000"),
-            23,
-            1,
+            BigDecimal("3000"), // Saldo em conta (irrelevante p/ crédito)
+            BigDecimal("2000"), // Limite
+            BigDecimal("1000"), // Usado
+            23,                 // Dia Fechamento
+            1,                  // Dia Vencimento
             mutableListOf(
                 Spent(
                     name = "Almoço",
@@ -107,7 +106,6 @@ class OverviewRepository {
     )
 
     fun getBalance(): List<BigDecimal> {
-
         val totalBalance = fakePayment.fold(BigDecimal.ZERO) { acc, payment ->
             acc.add(payment.balance)
         }
@@ -131,6 +129,27 @@ class OverviewRepository {
             totalUsage
         )
     }
+
     fun getSpents(): List<Spent> =
         fakePayment.flatMap { it.spent ?: emptyList() }
+
+    fun getBestCardForToday(): Payment? {
+        val today = LocalDate.now().dayOfMonth
+        val creditCards = fakePayment.filter { it.option == Options.CREDIT }
+
+        val bestWindowCards = creditCards.filter {
+            val close = it.bestDate ?: 32
+            val due = it.shutdown ?: 0
+
+            today > close && today < due
+        }
+
+        val candidates = if (bestWindowCards.isNotEmpty()) bestWindowCards else creditCards
+
+        return candidates.maxByOrNull { payment ->
+            val limit = payment.limit ?: BigDecimal.ZERO
+            val usage = payment.usage ?: BigDecimal.ZERO
+            limit.subtract(usage)
+        }
+    }
 }
