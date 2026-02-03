@@ -55,4 +55,5 @@ dependencies {
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
     implementation("androidx.biometric:biometric-ktx:1.2.0-alpha05")
+    implementation("androidx.activity:activity-ktx:1.8.2")
 }
