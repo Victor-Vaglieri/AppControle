@@ -68,6 +68,10 @@ class HomeActivity : AppCompatActivity() {
                 .toInt()
         }
 
+        viewModel.bestCardName.observe(this) { cardName ->
+            binding.tvBestCardName.text = cardName
+        }
+
 
         binding.valInvestido.text = correctString(invest, true)
         binding.valSaldo.text = correctString(balance, true)

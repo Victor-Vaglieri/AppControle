@@ -8,6 +8,7 @@
     ☐ - confirmar toda lista de configurações apos terminar a aplicação
 ☑ - home.xml
     ☐ - criar config que acessa tipo de moeda (ViewModel, Activity)
+    ☑ - colocar em algum lugar o melhor cartão do dia
     ☑ - Corrigir os CorrectStrings()
     ☑ - pegar os metodos de pagamento e coloca-los nas opções abaixo de topBar
 ☑ - investments.xml
