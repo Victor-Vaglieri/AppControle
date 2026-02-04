@@ -41,7 +41,7 @@
                         android:layout_height="wrap_content"
                         android:text="Item"
                         android:textStyle="bold"
-                        android:textSize="16sp"
+                        android:textSize="20sp"
                         android:textColor="@color/neutral_dark_dark"/>
 
                     <TextView
@@ -62,7 +62,7 @@
                         android:layout_marginTop="16dp"
                         android:text="Método"
                         android:textStyle="bold"
-                        android:textSize="12sp"
+                        android:textSize="20sp"
                         android:textColor="@color/neutral_dark_dark"/>
 
                     <TextView
@@ -93,7 +93,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="Valor"
                                 android:textStyle="bold"
-                                android:textSize="12sp"
+                                android:textSize="20sp"
                                 android:textColor="@color/neutral_dark_dark"/>
 
                             <TextView
@@ -138,11 +138,9 @@
                     <CalendarView
                         android:id="@+id/calendarDetail"
                         android:layout_width="match_parent"
-                        android:layout_height="320dp"
+                        android:layout_height="400dp"
                         android:layout_marginTop="24dp"
-
                         android:background="@drawable/bg_input_outline"
-
                         android:dateTextAppearance="@style/CalendarTextOverride"
                         android:weekDayTextAppearance="@style/CalendarTextOverride" />
 
