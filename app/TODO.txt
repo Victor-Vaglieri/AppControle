@@ -1,5 +1,3 @@
-☑ - login
-    ☑ - adicionar uma imagem condizente
 ☐ - bill.xml
     ☐ - adicionar o processo de Activity,ViewModel e Repository
 ☑ - config.xml
@@ -7,6 +5,7 @@
     ☐ - configurar para salvar as configurações na memoria interna
     ☐ - confirmar toda lista de configurações apos terminar a aplicação
 ☑ - home.xml
+    ☐ - acertar o filtro inicial para mudar de pagina
     ☐ - criar config que acessa tipo de moeda (ViewModel, Activity)
     ☑ - colocar em algum lugar o melhor cartão do dia
     ☑ - Corrigir os CorrectStrings()
@@ -14,8 +13,9 @@
 ☑ - investments.xml
     ☐ - configurar os botoes de editar e lançar
 ☑ - login.xml
+    ☑ - adicionar uma imagem condizente
 ☑ - notifications.xml
-☐ - payment_method_home.xml
+☑ - payment_method_home.xml
     ☑ - adicionar o processo de Activity,ViewModel e Repository (paymentsActivity)
 ☑ - payment_method_create.xml
     ☑ - adicionar o processo de Activity,ViewModel e Repository
@@ -28,7 +28,11 @@
     ☐ - Mudar no ViewModel para pegar da memoria interna
     ☑ - adicionar o repository
     ☑ - consertar os graficos (aprender mexer nisso melhor)
+    ☐ - configurar notificações
 ☑ - simulator.xml
     ☐ - arrumar um elemento no layout/simulator.xml que não esta arredondado
+    ☐ - adicionar infos ao clicar no icone info
 ☑ - spent_create.xml
+    ☐ - mudar a forma que a lista de metodos é mostrada
 ☑ - spent_view.xml
+    ☐ - arrumar o fluxo de dados porque esta errado, parando no viewmodel
