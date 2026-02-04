@@ -48,10 +48,10 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
-                        android:src="@android:drawable/ic_menu_gallery"
-                        app:tint="@color/neutral_dark_light"
+                        android:layout_width="550sp"
+                        android:layout_height="550sp"
+                        android:src="@drawable/img_creation_method"
+                        android:contentDescription="Imagem de Adição de Método"
                         app:layout_constraintBottom_toTopOf="@+id/btnAdd"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -96,10 +96,9 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
-                        android:src="@android:drawable/ic_menu_gallery"
-                        app:tint="@color/neutral_dark_light"
+                        android:layout_width="400sp"
+                        android:layout_height="400sp"
+                        android:src="@drawable/img_edit_method"
                         app:layout_constraintBottom_toTopOf="@+id/btnEdit"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
