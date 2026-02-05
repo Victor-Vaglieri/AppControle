@@ -54,7 +54,7 @@
                 android:text="Tipo"
                 android:textColor="@color/neutral_dark_darkest"
                 android:textStyle="bold"
-                android:textSize="16sp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/spinnerType"
@@ -68,6 +68,45 @@
                 android:textColor="@color/neutral_dark_darkest"
                 app:drawableEndCompat="@drawable/icon_down"
                 app:drawableTint="@color/neutral_dark_lightest" />
+
+            <RadioGroup
+                android:id="@+id/containerTypeOptions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/bg_input_outline"
+                android:padding="8dp"
+                android:visibility="gone"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/rbCredit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Crédito"
+                    android:textSize="16sp"
+                    android:checked="true"
+                    android:textColor="@color/neutral_dark_darkest"
+                    android:buttonTint="@color/highlight_darkest"/>
+
+                <RadioButton
+                    android:id="@+id/rbDebit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Débito"
+                    android:textSize="16sp"
+                    android:textColor="@color/neutral_dark_darkest"
+                    android:buttonTint="@color/highlight_darkest"/>
+
+                <RadioButton
+                    android:id="@+id/rbMoney"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Dinheiro"
+                    android:textSize="16sp"
+                    android:textColor="@color/neutral_dark_darkest"
+                    android:buttonTint="@color/highlight_darkest"/>
+            </RadioGroup>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -95,7 +134,7 @@
                     android:src="@drawable/icon_minus"
                     app:tint="@color/highlight_darkest" />
 
-                <TextView
+                <EditText
                     android:id="@+id/tvLimitValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -103,7 +142,9 @@
                     android:gravity="center"
                     android:text="1.800,00"
                     android:textColor="@color/neutral_dark_darkest"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:background="@null"
+                    android:inputType="numberDecimal" />
 
                 <ImageView
                     android:id="@+id/btnLimitPlus"
@@ -142,7 +183,7 @@
                     android:src="@drawable/icon_minus"
                     app:tint="@color/highlight_darkest" />
 
-                <TextView
+                <EditText
                     android:id="@+id/tvBalanceValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -150,7 +191,9 @@
                     android:gravity="center"
                     android:text="24,56"
                     android:textColor="@color/neutral_dark_darkest"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:background="@null"
+                    android:inputType="numberDecimal" />
 
                 <ImageView
                     android:id="@+id/btnBalancePlus"

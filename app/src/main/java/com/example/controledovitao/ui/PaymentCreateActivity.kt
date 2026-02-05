@@ -1,26 +1,29 @@
 package com.example.controledovitao.ui
 
 import android.os.Bundle
-import android.widget.TextView
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.controledovitao.databinding.PaymentMethodCreateBinding
 import com.example.controledovitao.viewmodel.PaymentViewModel
+import com.example.controledovitao.R
 import java.util.Locale
 
-// TODO arrumar os campos de valores onde ao clicar se pode escrever
-// tambem precisa arrumar o campo "tipo" onde não esta sendo listado os tipos disponiveis
 class PaymentCreateActivity : AppCompatActivity() {
 
     private lateinit var binding: PaymentMethodCreateBinding
     private val viewModel: PaymentViewModel by viewModels()
 
-    // Variáveis locais para controlar os valores da tela
+    // Variáveis locais
     private var limitValue = 1800.0
     private var balanceValue = 24.56
     private var closeDate = 25
     private var dueDate = 2
+
+    private var isEditing = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,35 +31,51 @@ class PaymentCreateActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         TopBarHelper.setupTopBar(this, binding.topBar)
+
         updateUI()
+
         setupControls()
     }
 
     private fun setupControls() {
-        // Limite
-        binding.btnLimitMinus.setOnClickListener { limitValue -= 50; updateUI() }
-        binding.btnLimitPlus.setOnClickListener { limitValue += 50; updateUI() }
+        binding.btnLimitMinus.setOnClickListener {
+            limitValue -= 50
+            updateLimitText()
+        }
+        binding.btnLimitPlus.setOnClickListener {
+            limitValue += 50
+            updateLimitText()
+        }
 
-        // Saldo
-        binding.btnBalanceMinus.setOnClickListener { balanceValue -= 10; updateUI() }
-        binding.btnBalancePlus.setOnClickListener { balanceValue += 10; updateUI() }
+        // --- SALDO ---
+        binding.btnBalanceMinus.setOnClickListener {
+            balanceValue -= 10
+            updateBalanceText()
+        }
+        binding.btnBalancePlus.setOnClickListener {
+            balanceValue += 10
+            updateBalanceText()
+        }
 
-        // Data Fechamento (1 a 31)
-        binding.btnCloseDateMinus.setOnClickListener { if (closeDate > 1) closeDate--; updateUI() }
-        binding.btnCloseDatePlus.setOnClickListener { if (closeDate < 31) closeDate++; updateUI() }
+        // --- DATA FECHAMENTO ---
+        binding.btnCloseDateMinus.setOnClickListener { if (closeDate > 1) closeDate--; updateDates() }
+        binding.btnCloseDatePlus.setOnClickListener { if (closeDate < 31) closeDate++; updateDates() }
 
-        // Data Pagamento (1 a 31)
-        binding.btnDueDateMinus.setOnClickListener { if (dueDate > 1) dueDate--; updateUI() }
-        binding.btnDueDatePlus.setOnClickListener { if (dueDate < 31) dueDate++; updateUI() }
+        // --- DATA PAGAMENTO ---
+        binding.btnDueDateMinus.setOnClickListener { if (dueDate > 1) dueDate--; updateDates() }
+        binding.btnDueDatePlus.setOnClickListener { if (dueDate < 31) dueDate++; updateDates() }
 
-        // Botão Salvar
         binding.btnAdd.setOnClickListener {
             val name = binding.etMethodName.text.toString()
+            val finalLimit = try {
+                binding.tvLimitValue.text.toString().replace(".", "").replace(",", ".").toDouble()
+            } catch (e: Exception) { limitValue }
+
             if (name.isNotEmpty()) {
                 viewModel.createPayment(
                     name = name,
-                    type = "Crédito", // Fixo por enquanto ou pegue do spinner
-                    limit = limitValue,
+                    type = binding.spinnerType.text.toString(),
+                    limit = finalLimit,
                     balance = balanceValue,
                     closeDay = closeDate,
                     dueDay = dueDate
@@ -67,11 +86,45 @@ class PaymentCreateActivity : AppCompatActivity() {
                 Toast.makeText(this, "Digite um nome", Toast.LENGTH_SHORT).show()
             }
         }
+
+        binding.spinnerType.setOnClickListener {
+            if (binding.containerTypeOptions.visibility == View.VISIBLE) {
+                binding.containerTypeOptions.visibility = View.GONE
+                binding.spinnerType.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down, 0)
+            } else {
+                binding.containerTypeOptions.visibility = View.VISIBLE
+                binding.spinnerType.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up, 0)
+            }
+        }
+
+        binding.containerTypeOptions.setOnCheckedChangeListener { group, checkedId ->
+            when (checkedId) {
+                R.id.rbCredit -> binding.spinnerType.text = "Crédito"
+                R.id.rbDebit -> binding.spinnerType.text = "Débito"
+                R.id.rbMoney -> binding.spinnerType.text = "Dinheiro"
+            }
+            binding.containerTypeOptions.visibility = View.GONE
+            binding.spinnerType.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down, 0)
+        }
     }
 
+
     private fun updateUI() {
-        binding.tvLimitValue.text = String.format(Locale("pt", "BR"), "%.2f", limitValue)
-        binding.tvBalanceValue.text = String.format(Locale("pt", "BR"), "%.2f", balanceValue)
+        updateLimitText()
+        updateBalanceText()
+        updateDates()
+    }
+
+    private fun updateLimitText() {
+        // Formata para 1.800,00
+        binding.tvLimitValue.setText(String.format(Locale("pt", "BR"), "%.2f", limitValue))
+    }
+
+    private fun updateBalanceText() {
+        binding.tvBalanceValue.setText(String.format(Locale("pt", "BR"), "%.2f", balanceValue))
+    }
+
+    private fun updateDates() {
         binding.tvCloseDateValue.text = closeDate.toString()
         binding.tvDueDateValue.text = dueDate.toString()
     }
