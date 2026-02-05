@@ -1,14 +1,7 @@
 package com.example.controledovitao.data.repository
 
 import java.math.BigDecimal
-
-data class SimulationOption(
-    val id: String,
-    val name: String,
-    val type: SimulationType,
-    val annualRate: Double // Ex: 0.10 para 10%
-)
-
+import com.example.controledovitao.data.model.SimulationOption
 enum class SimulationType { BANCO, CRIPTO }
 
 class SimulationRepository {
