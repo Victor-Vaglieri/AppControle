@@ -19,7 +19,7 @@
     ☑ - adicionar o processo de Activity,ViewModel e Repository (paymentsActivity)
 ☑ - payment_method_create.xml
     ☑ - adicionar o processo de Activity,ViewModel e Repository
-    ☐ - consertar os campos de texto e o campo de "tipo"
+    ☑ - consertar os campos de texto e o campo de "tipo"
 ☑ - payment_method_edit.xml
     ☑ - adicionar o processo de Activity,ViewModel e Repository
 ☑ - payment_method_list.xml
@@ -30,10 +30,10 @@
     ☑ - consertar os graficos (aprender mexer nisso melhor)
     ☐ - configurar notificações
 ☑ - simulator.xml
-    ☐ - mudar a forma que a lista de metodos é mostrada
+    ☑ - mudar a forma que a lista de metodos é mostrada
     ☐ - arrumar um elemento no layout/simulator.xml que não esta arredondado
     ☐ - adicionar infos ao clicar no icone info
 ☑ - spent_create.xml
-    ☐ - mudar a forma que a lista de metodos é mostrada
+    ☑ - mudar a forma que a lista de metodos é mostrada
 ☑ - spent_view.xml
     ☐ - arrumar o fluxo de dados porque esta errado, parando no viewmodel

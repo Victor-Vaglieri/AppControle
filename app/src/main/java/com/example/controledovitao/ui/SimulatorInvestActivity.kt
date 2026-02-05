@@ -3,7 +3,7 @@ package com.example.controledovitao.ui
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.widget.PopupMenu // Para o Dropdown
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
@@ -11,6 +11,8 @@ import com.example.controledovitao.R
 import com.example.controledovitao.data.repository.SimulationType
 import com.example.controledovitao.databinding.SimulatorBinding
 import com.example.controledovitao.viewmodel.SimulatorViewModel
+import com.example.controledovitao.ui.adapter.SimulatorOptionAdapter
+import androidx.recyclerview.widget.LinearLayoutManager
 import java.math.BigDecimal
 import java.text.NumberFormat
 import java.util.Locale
@@ -19,6 +21,8 @@ class SimulatorInvestActivity : AppCompatActivity() {
 
     private lateinit var binding: SimulatorBinding
     private lateinit var viewModel: SimulatorViewModel
+
+    private lateinit var optionsAdapter: SimulatorOptionAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,8 +34,20 @@ class SimulatorInvestActivity : AppCompatActivity() {
 
         setupTabs()
         setupInputs()
+        setupDropdownList()
         setupObservers()
         setupNavigation()
+    }
+
+    private fun setupDropdownList() {
+        optionsAdapter = SimulatorOptionAdapter(emptyList()) { selectedOption ->
+            viewModel.selectOption(selectedOption)
+            binding.recyclerOptions.visibility = View.GONE
+            binding.spinnerInvestment.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down, 0)
+        }
+
+        binding.recyclerOptions.layoutManager = LinearLayoutManager(this)
+        binding.recyclerOptions.adapter = optionsAdapter
     }
 
     private fun setupTabs() {
@@ -44,39 +60,34 @@ class SimulatorInvestActivity : AppCompatActivity() {
     }
 
     private fun setupInputs() {
-        // Dropdown (PopupMenu)
-        binding.spinnerInvestment.setOnClickListener { view ->
-            val options = viewModel.availableOptions.value ?: return@setOnClickListener
-            val popup = PopupMenu(this, view)
-
-            options.forEach { option ->
-                popup.menu.add(option.name).setOnMenuItemClickListener {
-                    viewModel.selectOption(option)
-                    true
-                }
+        // Lógica de Expandir/Recolher ao clicar no campo "Spinner"
+        binding.spinnerInvestment.setOnClickListener {
+            if (binding.recyclerOptions.visibility == View.VISIBLE) {
+                // Fechar
+                binding.recyclerOptions.visibility = View.GONE
+                binding.spinnerInvestment.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down, 0)
+            } else {
+                // Abrir
+                binding.recyclerOptions.visibility = View.VISIBLE
+                binding.spinnerInvestment.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up, 0) // Use seu icon_up
             }
-            popup.show()
         }
 
-        // Valor
+        // Inputs de Valor e Data (Mantidos iguais)
         binding.btnValPlus.setOnClickListener { viewModel.changeValue(BigDecimal("100")) }
         binding.btnValMinus.setOnClickListener { viewModel.changeValue(BigDecimal("-100")) }
 
-        // Anos
         binding.btnYearPlus.setOnClickListener { viewModel.changeYears(1) }
         binding.btnYearMinus.setOnClickListener { viewModel.changeYears(-1) }
 
-        // Meses
         binding.btnMonthPlus.setOnClickListener { viewModel.changeMonths(1) }
         binding.btnMonthMinus.setOnClickListener { viewModel.changeMonths(-1) }
     }
-
     private fun setupObservers() {
         val localeBR = Locale("pt", "BR")
         val currencyFormat = NumberFormat.getCurrencyInstance(localeBR)
         val numberFormat = NumberFormat.getInstance(localeBR)
 
-        // 1. Alternar visual das abas
         viewModel.currentType.observe(this) { type ->
             if (type == SimulationType.BANCO) {
                 binding.tabBanco.setBackgroundResource(R.drawable.bg_tab_active)
@@ -91,14 +102,17 @@ class SimulatorInvestActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.selectedOption.observe(this) { option ->
-            binding.spinnerInvestment.text = option.name
+        viewModel.availableOptions.observe(this) { options ->
+            optionsAdapter.updateList(options)
+
+            if (options.isNotEmpty()) {
+                binding.spinnerInvestment.text = options[0].name
+                viewModel.selectOption(options[0])
+            }
         }
 
-        // 2. Atualizar Dropdown Label
-        // (Isso depende de como você expõe o selecionado, simplificado aqui)
-        viewModel.availableOptions.observe(this) { options ->
-            if (options.isNotEmpty()) binding.spinnerInvestment.text = options[0].name
+        viewModel.selectedOption.observe(this) { option ->
+            binding.spinnerInvestment.text = option.name
         }
 
         // 3. Atualizar Textos de Info

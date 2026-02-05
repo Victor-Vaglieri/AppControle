@@ -3,7 +3,7 @@ package com.example.controledovitao.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.controledovitao.data.repository.SimulationOption
+import com.example.controledovitao.data.model.SimulationOption
 import com.example.controledovitao.data.repository.SimulationRepository
 import com.example.controledovitao.data.repository.SimulationType
 import java.math.BigDecimal

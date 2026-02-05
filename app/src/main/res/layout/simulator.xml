@@ -95,10 +95,22 @@
                         android:background="@drawable/bg_input_outline"
                         android:gravity="center_vertical"
                         android:paddingHorizontal="16dp"
-                        android:text="Poupança"
+                        android:text="Selecione..."
                         android:textColor="@color/neutral_dark_darkest"
                         app:drawableEndCompat="@drawable/icon_down"
                         app:drawableTint="@color/neutral_dark_lightest" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerOptions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:background="@drawable/bg_input_outline"
+                        android:visibility="gone"
+                        android:nestedScrollingEnabled="false"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:listitem="@layout/item_spinner_option"
+                        tools:itemCount="3"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
