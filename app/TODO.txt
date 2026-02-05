@@ -30,6 +30,7 @@
     ☑ - consertar os graficos (aprender mexer nisso melhor)
     ☐ - configurar notificações
 ☑ - simulator.xml
+    ☐ - mudar a forma que a lista de metodos é mostrada
     ☐ - arrumar um elemento no layout/simulator.xml que não esta arredondado
     ☐ - adicionar infos ao clicar no icone info
 ☑ - spent_create.xml
