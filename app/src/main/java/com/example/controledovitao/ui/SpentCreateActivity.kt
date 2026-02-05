@@ -4,86 +4,100 @@ import android.app.DatePickerDialog
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import android.os.Bundle
-import android.widget.PopupMenu
+import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.controledovitao.R
+import com.example.controledovitao.data.model.Options
+import com.example.controledovitao.data.model.Payment
 import com.example.controledovitao.databinding.SpentCreateBinding
+import com.example.controledovitao.ui.adapter.PaymentSpinnerAdapter
+import com.example.controledovitao.viewmodel.PaymentViewModel
 import com.example.controledovitao.viewmodel.SpentViewModel
 import java.math.BigDecimal
 import java.util.Locale
 
 class SpentCreateActivity : AppCompatActivity() {
+
     private lateinit var binding: SpentCreateBinding
+
     private lateinit var viewModel: SpentViewModel
+
+    private val paymentViewModel: PaymentViewModel by viewModels()
+
+    private lateinit var methodAdapter: PaymentSpinnerAdapter
+    private var selectedPayment: Payment? = null
 
     private val calendar = Calendar.getInstance()
 
-    private var paymentMethods = listOf(
-        Pair("Cartão de Crédito", true),
-        Pair("Cartão de Débito", false),
-        Pair("Dinheiro", false),
-        Pair("Pix", false)
-    )
+    // Variáveis de controle local
+    private var amountValue = 0.0
+    private var timesValue = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = SpentCreateBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         viewModel = ViewModelProvider(this)[SpentViewModel::class.java]
 
         TopBarHelper.setupTopBar(this, binding.topBar)
 
         setupUI()
+        setupDropdown()
         setupListeners()
         setupObservers()
+
+        paymentViewModel.loadMethods()
     }
 
     private fun setupUI() {
         atualizarDataNoInput()
-        binding.inputValue.setText("0.00")
+        binding.inputValue.setText("0,00")
 
-        paymentMethods = viewModel.methods
+        configurarInputVezes(false)
+    }
 
+    private fun setupDropdown() {
+        methodAdapter = PaymentSpinnerAdapter(emptyList()) { payment ->
+            selectedPayment = payment
+            binding.inputMethod.text = payment.name
 
-        if (paymentMethods.isNotEmpty()) {
-            val (nome, isCredit) = paymentMethods[0]
-            binding.inputMethod.text = nome
+            binding.recyclerMethods.visibility = View.GONE
+            binding.iconArrowMethod.setImageResource(R.drawable.icon_down)
+
+            val isCredit = (payment.option == Options.CREDIT)
             configurarInputVezes(isCredit)
         }
+
+        binding.recyclerMethods.layoutManager = LinearLayoutManager(this)
+        binding.recyclerMethods.adapter = methodAdapter
+        val toggleListener = View.OnClickListener {
+            if (binding.recyclerMethods.visibility == View.VISIBLE) {
+                binding.recyclerMethods.visibility = View.GONE
+                binding.iconArrowMethod.setImageResource(R.drawable.icon_down)
+            } else {
+                binding.recyclerMethods.visibility = View.VISIBLE
+                binding.iconArrowMethod.setImageResource(R.drawable.icon_up)
+            }
+        }
+
+        binding.inputMethod.setOnClickListener(toggleListener)
+        binding.iconArrowMethod.setOnClickListener(toggleListener)
     }
 
     private fun setupListeners() {
         binding.inputDate.setOnClickListener {
             mostrarCalendario()
-
         }
 
-        binding.inputMethod.setOnClickListener { view ->
-            val popup = PopupMenu(this, view)
-
-            paymentMethods.forEach { (nome, _) ->
-                popup.menu.add(nome)
-            }
-
-            popup.setOnMenuItemClickListener { item ->
-                val selecionado = item.title.toString()
-                binding.inputMethod.text = selecionado
-
-                // Busca na lista se é crédito ou não
-                val metodo = paymentMethods.find { it.first == selecionado }
-                val isCredit = metodo?.second ?: false
-
-                configurarInputVezes(isCredit)
-                true
-            }
-            popup.show()
-        }
-
+        // Botões de Valor
         binding.btnValuePlus.setOnClickListener { ajustarValor(10.0) }
         binding.btnValueMinus.setOnClickListener { ajustarValor(-10.0) }
 
+        // Botões de Vezes
         binding.btnTimesPlus.setOnClickListener { ajustarParcelas(1) }
         binding.btnTimesMinus.setOnClickListener { ajustarParcelas(-1) }
 
@@ -92,27 +106,18 @@ class SpentCreateActivity : AppCompatActivity() {
         }
     }
 
-    // Função que ativa ou desativa o bloco de "Vezes"
-    private fun configurarInputVezes(ativar: Boolean) {
-        // Habilita/Desabilita interações
-        binding.inputTimes.isEnabled = ativar
-        binding.btnTimesPlus.isEnabled = ativar
-        binding.btnTimesMinus.isEnabled = ativar
-
-        // Feedback Visual: Se desativado, fica meio transparente (0.5)
-        val alpha = if (ativar) 1.0f else 0.3f
-        binding.lblTimes.alpha = alpha
-        binding.inputTimes.alpha = alpha
-        binding.btnTimesPlus.alpha = alpha
-        binding.btnTimesMinus.alpha = alpha
-
-        // Se desativar, reseta para 1 parcela (opcional, mas recomendado)
-        if (!ativar) {
-            binding.inputTimes.setText("1")
-        }
-    }
-
     private fun setupObservers() {
+        paymentViewModel.paymentMethods.observe(this) { methods ->
+            methodAdapter.updateList(methods)
+
+            if (selectedPayment == null && methods.isNotEmpty()) {
+                val first = methods[0]
+                selectedPayment = first
+                binding.inputMethod.text = first.name
+                configurarInputVezes(first.option == Options.CREDIT)
+            }
+        }
+
         viewModel.saveSuccess.observe(this) { success ->
             if (success) {
                 Toast.makeText(this, "Gasto salvo com sucesso!", Toast.LENGTH_SHORT).show()
@@ -125,43 +130,73 @@ class SpentCreateActivity : AppCompatActivity() {
         }
     }
 
+    private fun configurarInputVezes(ativar: Boolean) {
+        binding.inputTimes.isEnabled = ativar
+        binding.btnTimesPlus.isEnabled = ativar
+        binding.btnTimesMinus.isEnabled = ativar
+
+        val alpha = if (ativar) 1.0f else 0.3f
+        binding.lblTimes.alpha = alpha
+        binding.inputTimes.alpha = alpha
+        binding.btnTimesPlus.alpha = alpha
+        binding.btnTimesMinus.alpha = alpha
+
+        if (!ativar) {
+            timesValue = 1
+            binding.inputTimes.setText("1")
+        }
+    }
+
     private fun ajustarValor(delta: Double) {
-        val atualString = binding.inputValue.text.toString().replace(",", ".")
-        val atual = atualString.toDoubleOrNull() ?: 0.0
+        val valorTexto = binding.inputValue.text.toString()
+            .replace(".", "")
+            .replace(",", ".")
+
+        val atual = valorTexto.toDoubleOrNull() ?: amountValue
         val novo = (atual + delta).coerceAtLeast(0.0)
-        binding.inputValue.setText(String.format(Locale.of("pt", "BR"), "%.2f", novo))
+
+        amountValue = novo
+        binding.inputValue.setText(String.format(Locale("pt", "BR"), "%.2f", novo))
     }
 
     private fun ajustarParcelas(delta: Int) {
         if (!binding.inputTimes.isEnabled) return
 
-        val atual = binding.inputTimes.text.toString().toIntOrNull() ?: 1
+        val atual = binding.inputTimes.text.toString().toIntOrNull() ?: timesValue
         val novo = (atual + delta).coerceAtLeast(1)
+
+        timesValue = novo
         binding.inputTimes.setText(novo.toString())
     }
 
     private fun salvarGasto() {
         val item = binding.inputItem.text.toString().trim()
-        val metodo = binding.inputMethod.text.toString()
-        val valorStr = binding.inputValue.text.toString().replace(",", ".")
-        val parcelasStr = binding.inputTimes.text.toString()
+        val valorStr = binding.inputValue.text.toString()
+            .replace(".", "")
+            .replace(",", ".")
+
+        val valor = valorStr.toBigDecimalOrNull()
 
         if (item.isEmpty()) {
             binding.inputItem.error = "Dê um nome para o gasto"
             return
         }
 
-        val valor = valorStr.toBigDecimalOrNull()
+        if (selectedPayment == null) {
+            Toast.makeText(this, "Selecione um método de pagamento", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         if (valor == null || valor <= BigDecimal("0")) {
             binding.inputValue.error = "Valor inválido"
             return
         }
 
-        val parcelas = parcelasStr.toIntOrNull() ?: 1
+        val parcelas = binding.inputTimes.text.toString().toIntOrNull() ?: 1
 
         viewModel.saveExpense(
             title = item,
-            method = metodo,
+            method = selectedPayment!!.name,
             value = valor,
             installments = parcelas,
             date = calendar.timeInMillis
@@ -186,9 +221,7 @@ class SpentCreateActivity : AppCompatActivity() {
     }
 
     private fun atualizarDataNoInput() {
-        val formato = SimpleDateFormat("dd/MM/yyyy", Locale.of("pt", "BR"))
+        val formato = SimpleDateFormat("dd/MM/yyyy", Locale("pt", "BR"))
         binding.inputDate.text = formato.format(calendar.time)
     }
-
-
 }
