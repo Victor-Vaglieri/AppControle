@@ -37,3 +37,5 @@
     ☑ - mudar a forma que a lista de metodos é mostrada
 ☑ - spent_view.xml
     ☐ - arrumar o fluxo de dados porque esta errado, parando no viewmodel
+☑ - arrumar todos os repositorys para um db on service
+    ☐ - adicionar a activity do simulator um codigo que pega os valores anuais faz a media e joga no firebase

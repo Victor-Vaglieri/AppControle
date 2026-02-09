@@ -1,8 +1,11 @@
 package com.example.controledovitao.data.model
 
+import com.google.firebase.firestore.DocumentId
+
 data class User(
-    val login: String,
-    val pass: String,
-    val name: String,
-    val email: String
+    @DocumentId
+    val id: String = "",
+    val name: String = "",
+    val email: String = ""
+
 )

@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
 
     id("kotlin-parcelize")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -56,4 +57,8 @@ dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
     implementation("androidx.biometric:biometric-ktx:1.2.0-alpha05")
     implementation("androidx.activity:activity-ktx:1.8.2")
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    implementation("com.google.firebase:firebase-firestore")
+
+    implementation("com.google.firebase:firebase-analytics")
 }

@@ -6,6 +6,6 @@ data class Overview (
     var totalBalance: BigDecimal,
     var totalLimit: BigDecimal,
     var totalInvest: BigDecimal,
-    var paymentsSaved: MutableList<Payment>,
-    var investMade: MutableList<Invest>
+    var paymentsSaved: List<Payment>,
+    var investMade: List<Invest>
 )
