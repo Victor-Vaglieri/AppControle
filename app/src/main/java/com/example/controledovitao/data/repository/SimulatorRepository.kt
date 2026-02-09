@@ -2,7 +2,7 @@ package com.example.controledovitao.data.repository
 
 import java.math.BigDecimal
 import com.example.controledovitao.data.model.SimulationOption
-enum class SimulationType { BANCO, CRIPTO }
+import com.example.controledovitao.data.model.SimulationType
 
 class SimulationRepository {
 
