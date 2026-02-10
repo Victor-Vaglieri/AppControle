@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.controledovitao.data.model.SimulationOption
 import com.example.controledovitao.data.repository.SimulationRepository
-import com.example.controledovitao.data.repository.SimulationType
+import com.example.controledovitao.data.model.SimulationType
 import java.math.BigDecimal
 import java.math.RoundingMode
 import kotlin.math.pow

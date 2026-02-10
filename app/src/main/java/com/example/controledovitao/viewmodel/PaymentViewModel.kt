@@ -31,10 +31,10 @@ class PaymentViewModel : ViewModel() {
 
         val newPayment = Payment(
             name = name,
-            option = typeEnum,
-            balance = BigDecimal(balance),
-            limit = BigDecimal(limit),
-            usage = BigDecimal.ZERO,
+            optionType = typeEnum.toString(),
+            balance = BigDecimal(balance).toDouble(),
+            limit = BigDecimal(limit).toDouble(),
+            usage = BigDecimal.ZERO.toDouble(),
             bestDate = closeDay,
             shutdown = dueDay,
             spent = mutableListOf()
@@ -47,7 +47,7 @@ class PaymentViewModel : ViewModel() {
 
         val updatedPayment = current.copy(
             name = name,
-            limit = BigDecimal(limit),
+            limit = BigDecimal(limit).toDouble(),
             bestDate = closeDay,
             shutdown = dueDay
         )
