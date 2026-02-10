@@ -5,12 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.controledovitao.data.model.Options
 import com.example.controledovitao.data.model.Payment
-import com.example.controledovitao.data.repository.OverviewRepository
+import com.example.controledovitao.data.repository.PaymentRepository
 import java.math.BigDecimal
 
 class PaymentViewModel : ViewModel() {
 
-    private val repository = OverviewRepository()
+    private val repository = PaymentRepository
 
     private val _paymentMethods = MutableLiveData<List<Payment>>()
     val paymentMethods: LiveData<List<Payment>> = _paymentMethods
@@ -18,39 +18,64 @@ class PaymentViewModel : ViewModel() {
     private val _selectedPayment = MutableLiveData<Payment?>()
     val selectedPayment: LiveData<Payment?> = _selectedPayment
 
+    private val _operationStatus = MutableLiveData<Boolean>()
+    val operationStatus: LiveData<Boolean> = _operationStatus
+
+    init {
+        loadMethods()
+    }
+
     fun loadMethods() {
-        _paymentMethods.value = repository.getMethods()
+        repository.listenToMethods { list ->
+            _paymentMethods.value = list
+        }
     }
 
     fun loadMethodByName(name: String) {
-        _selectedPayment.value = repository.getMethodByName(name)
+        val list = _paymentMethods.value ?: emptyList()
+        val found = list.find { it.name == name }
+        _selectedPayment.value = found
     }
 
     fun createPayment(name: String, type: String, limit: Double, balance: Double, closeDay: Int, dueDay: Int) {
-        val typeEnum = if (type == "Crédito") Options.CREDIT else Options.DEBIT
+        val typeEnum = if (type.equals("Crédito", ignoreCase = true)) Options.CREDIT else Options.DEBIT
 
         val newPayment = Payment(
             name = name,
-            optionType = typeEnum.toString(),
-            balance = BigDecimal(balance).toDouble(),
-            limit = BigDecimal(limit).toDouble(),
-            usage = BigDecimal.ZERO.toDouble(),
+            optionType = typeEnum.name,
+            balance = balance,
+            limit = limit,
+            usage = 0.0,
             bestDate = closeDay,
             shutdown = dueDay,
             spent = mutableListOf()
         )
-        repository.addMethod(newPayment)
+
+        repository.saveMethod(newPayment) { success ->
+            _operationStatus.value = success
+        }
     }
 
     fun updatePayment(originalName: String, name: String, limit: Double, closeDay: Int, dueDay: Int) {
-        val current = repository.getMethodByName(originalName) ?: return
+        val currentList = _paymentMethods.value ?: emptyList()
+        val originalPayment = currentList.find { it.name == originalName }
 
-        val updatedPayment = current.copy(
+        if (originalPayment == null) {
+            _operationStatus.value = false
+            return
+        }
+
+
+        val updatedPayment = originalPayment.copy(
             name = name,
-            limit = BigDecimal(limit).toDouble(),
+            limit = limit,
             bestDate = closeDay,
             shutdown = dueDay
+
         )
-        repository.updateMethod(originalName, updatedPayment)
+
+        repository.updateMethod(updatedPayment) { success ->
+            _operationStatus.value = success
+        }
     }
 }

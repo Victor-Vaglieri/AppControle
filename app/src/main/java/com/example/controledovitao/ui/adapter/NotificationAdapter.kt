@@ -5,29 +5,44 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.controledovitao.data.model.Status
+import com.example.controledovitao.data.model.Notification // Importe o seu Model
+import com.example.controledovitao.data.model.Status       // Importe o seu Enum Status
 import com.example.controledovitao.databinding.ItemNotificationBinding
 
-class NotificationAdapter(
-    private val items: List<Triple<Int, String, String>>
-) : RecyclerView.Adapter<NotificationAdapter.NotificationViewHolder>() {
-
+class NotificationAdapter : RecyclerView.Adapter<NotificationAdapter.NotificationViewHolder>() {
+    private var items: List<Notification> = emptyList()
     private val expandedPositions = mutableSetOf<Int>()
+    fun updateList(newItems: List<Notification>) {
+        this.items = newItems
+        notifyDataSetChanged()
+    }
 
-    inner class NotificationViewHolder(val binding: ItemNotificationBinding) :
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotificationViewHolder {
+        val binding = ItemNotificationBinding.inflate(
+            LayoutInflater.from(parent.context), parent, false
+        )
+        return NotificationViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: NotificationViewHolder, position: Int) {
+        holder.bind(items[position], position)
+    }
+
+    override fun getItemCount() = items.size
+
+    inner class NotificationViewHolder(private val binding: ItemNotificationBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Triple<Int, String, String>, position: Int) {
-            val (statusOp, title, description) = item
+        fun bind(item: Notification, position: Int) {
+            binding.tvTitle.text = item.title
+            binding.tvDescription.text = item.description
 
-            binding.tvTitle.text = title
-            binding.tvDescription.text = description
 
-            val color = when (statusOp) {
-                Status.URGENT.op -> Color.parseColor("#EA4335")   // Vermelho (2)
-                Status.STANDARD.op -> Color.parseColor("#FBBC05") // Laranja (1)
-                Status.CONCLUDE.op -> Color.parseColor("#34A853") // Verde (-1)
-                else -> Color.parseColor("#4285F4")               // Azul (0 ou outros)
+            val color = when (item.statusOp) {
+                Status.URGENT.op -> Color.parseColor("#EA4335")
+                Status.STANDARD.op -> Color.parseColor("#FBBC05")
+                Status.CONCLUDE.op -> Color.parseColor("#34A853")
+                else -> Color.parseColor("#4285F4")
             }
             binding.imgIcon.setColorFilter(color)
 
@@ -38,6 +53,7 @@ class NotificationAdapter(
                 binding.imgArrow.rotation = 180f
             } else {
                 binding.tvDescription.visibility = View.GONE
+                binding.imgArrow.rotation = 0f
             }
 
             binding.root.setOnClickListener {
@@ -50,18 +66,4 @@ class NotificationAdapter(
             }
         }
     }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotificationViewHolder {
-        val binding = ItemNotificationBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false
-        )
-        return NotificationViewHolder(binding)
-    }
-
-    override fun onBindViewHolder(holder: NotificationViewHolder, position: Int) {
-        // Passamos a posição atual para controlar o estado de expansão
-        holder.bind(items[position], position)
-    }
-
-    override fun getItemCount() = items.size
 }

@@ -15,6 +15,7 @@ data class Invest(
 
     val estimate: Double = 0.0
 ) {
+
     @get:Exclude
     val valueAsBigDecimal: BigDecimal
         get() = BigDecimal.valueOf(value)

@@ -1,41 +1,7 @@
-☐ - bill.xml
-    ☐ - adicionar o processo de Activity,ViewModel e Repository
-☑ - config.xml
-    ☐ - configurar para mudar a imagem
-    ☐ - configurar para salvar as configurações na memoria interna
-    ☐ - confirmar toda lista de configurações apos terminar a aplicação
-☑ - home.xml
-    ☐ - acertar o filtro inicial para mudar de pagina
-    ☐ - criar config que acessa tipo de moeda (ViewModel, Activity)
-    ☑ - colocar em algum lugar o melhor cartão do dia
-    ☑ - Corrigir os CorrectStrings()
-    ☑ - pegar os metodos de pagamento e coloca-los nas opções abaixo de topBar
-☑ - investments.xml
-    ☐ - configurar os botoes de editar e lançar
-☑ - login.xml
-    ☑ - adicionar uma imagem condizente
-☑ - notifications.xml
-☑ - payment_method_home.xml
-    ☑ - adicionar o processo de Activity,ViewModel e Repository (paymentsActivity)
-☑ - payment_method_create.xml
-    ☑ - adicionar o processo de Activity,ViewModel e Repository
-    ☑ - consertar os campos de texto e o campo de "tipo"
-☑ - payment_method_edit.xml
-    ☑ - adicionar o processo de Activity,ViewModel e Repository
-☑ - payment_method_list.xml
-    ☑ - adicionar o processo de Activity,ViewModel e Repository
-☑ - reports.xml
-    ☐ - Mudar no ViewModel para pegar da memoria interna
-    ☑ - adicionar o repository
-    ☑ - consertar os graficos (aprender mexer nisso melhor)
-    ☐ - configurar notificações
-☑ - simulator.xml
-    ☑ - mudar a forma que a lista de metodos é mostrada
-    ☐ - arrumar um elemento no layout/simulator.xml que não esta arredondado
-    ☐ - adicionar infos ao clicar no icone info
-☑ - spent_create.xml
-    ☑ - mudar a forma que a lista de metodos é mostrada
-☑ - spent_view.xml
-    ☐ - arrumar o fluxo de dados porque esta errado, parando no viewmodel
-☑ - arrumar todos os repositorys para um db on service
-    ☐ - adicionar a activity do simulator um codigo que pega os valores anuais faz a media e joga no firebase
+ConfigActivity
+HomeViewModel
+erro a adicionar valor em conta em adicionar metodo de pagamento
+erro no home que não muda ao adicionar
+erro em config que o tema só muda naquela pagina
+colocar api para simulador
+em adicionar gasto o vezes esta desativado quando o metodo é credito

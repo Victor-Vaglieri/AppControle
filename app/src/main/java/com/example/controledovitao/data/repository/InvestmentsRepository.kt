@@ -1,27 +1,38 @@
 package com.example.controledovitao.data.repository
 
+import android.util.Log
 import com.example.controledovitao.data.model.Invest
-import java.math.BigDecimal
-import java.time.Period
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.toObject
 
-class InvestmentsRepository {
+object InvestmentsRepository {
 
-    fun getInvestmentsList(): List<Invest> {
-        return listOf(
-            Invest(
-                name = "Poupança",
-                value = BigDecimal("1500.00"),
-                spentDate = System.currentTimeMillis(),
-                period = Period.of(4, 4, 0),
-                estimate = BigDecimal("2078.78")
-            ),
-            Invest(
-                name = "BitCoin (BC)",
-                value = BigDecimal("1500.00"),
-                spentDate = System.currentTimeMillis(),
-                period = Period.of(1, 0, 0),
-                estimate = BigDecimal("1920.00")
-            )
-        )
+    private val db = Firebase.firestore
+    private val collection = db.collection("investments")
+    fun listenToInvestments(onUpdate: (List<Invest>) -> Unit) {
+        collection.addSnapshotListener { snapshot, error ->
+            if (error != null) {
+                Log.e("InvestRepo", "Erro ao buscar investimentos", error)
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null) {
+                val investments = snapshot.documents.mapNotNull { doc ->
+                    doc.toObject<Invest>()
+                }
+                onUpdate(investments)
+            }
+        }
+    }
+
+    fun saveInvestment(invest: Invest, onResult: (Boolean) -> Unit) {
+        collection.add(invest)
+            .addOnSuccessListener { onResult(true) }
+            .addOnFailureListener { onResult(false) }
+    }
+
+    fun deleteInvestment(id: String) {
+        collection.document(id).delete()
     }
 }

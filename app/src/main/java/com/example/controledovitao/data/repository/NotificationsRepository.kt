@@ -1,61 +1,80 @@
 package com.example.controledovitao.data.repository
 
+import android.content.Context
+import android.util.Log
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.preferencesDataStore
 import com.example.controledovitao.data.model.Notification
-import com.example.controledovitao.data.model.Status
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.toObject
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
-class NotificationsRepository {
+private val Context.dataStore by preferencesDataStore(name = "notification_prefs")
 
-    private val fakeNotifications = mutableListOf(
-        Notification(
-            Status.INFO,
-    "Fatura fechada (Master Crédito)",
-    "A fatura do Master Crédito fechou no valor de R$ 1.500,00. Vencimento em 10 dias.",
-            System.currentTimeMillis(),
-            System.currentTimeMillis() + 10000
+class NotificationsRepository(private val context: Context) {
 
-    ),
-        Notification(
-            Status.STANDARD,
-    "Ação necessária (Master Débito)",
-    "Movimentação suspeita detectada no cartão final 9090.",
-            System.currentTimeMillis(),
-            System.currentTimeMillis() + 10000
-    ),
-        Notification(
-            Status.CONCLUDE,
-    "Gasto Salvo (PIX)",
-    "Seu gasto de R$ 50,00 foi salvo e categorizado com sucesso.",
-            System.currentTimeMillis(),
-            System.currentTimeMillis() + 10000
+    private val db = Firebase.firestore
+    private val auth = Firebase.auth
 
-    ),
-        Notification(
-            Status.STANDARD,
-    "Aviso de Limite (Master Crédito)",
-    "Você atingiu 90% do seu limite disponível.",
-            System.currentTimeMillis(),
-            System.currentTimeMillis() + 10000
-    ),
-        Notification(
-            Status.URGENT,
-    "Gastos maiores que o saldo",
-    "Atenção: Seus gastos previstos ultrapassam seu saldo atual.",
-            System.currentTimeMillis(),
-            System.currentTimeMillis() + 10000
-
-
-    )
-    )
-
-    fun getNotifications(): MutableList<Notification> {
-        return fakeNotifications
+    private val collectionPath = if (auth.currentUser != null) {
+        "users/${auth.currentUser!!.uid}/notifications"
+    } else {
+        "notifications_public"
     }
 
-    fun savePushPreference(isEnabled: Boolean){
-        println("Configuração salva: Push = $isEnabled")
+    private val collection = db.collection(collectionPath)
+
+    companion object {
+        val PUSH_KEY = booleanPreferencesKey("push_enabled")
+        val EMAIL_KEY = booleanPreferencesKey("email_enabled")
     }
 
-    fun saveEmailPreference(isEnabled: Boolean){
-        println("Configuração salva: Email = $isEnabled")
+
+    fun listenToNotifications(onUpdate: (List<Notification>) -> Unit) {
+        collection.orderBy("createDate", Query.Direction.DESCENDING)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    Log.e("NotifRepo", "Erro ao buscar notificações", error)
+                    return@addSnapshotListener
+                }
+
+                if (snapshot != null) {
+                    val list = snapshot.documents.mapNotNull { doc ->
+                        doc.toObject<Notification>()
+                    }
+                    onUpdate(list)
+                }
+            }
+    }
+
+    fun createTestNotification(notification: Notification) {
+        collection.add(notification)
+    }
+
+    fun deleteNotification(id: String) {
+        collection.document(id).delete()
+    }
+
+    val isPushEnabled: Flow<Boolean> = context.dataStore.data
+        .map { prefs -> prefs[PUSH_KEY] ?: true } // Padrão ativado
+
+    suspend fun savePushPreference(isEnabled: Boolean) {
+        context.dataStore.edit { prefs ->
+            prefs[PUSH_KEY] = isEnabled
+        }
+    }
+
+    val isEmailEnabled: Flow<Boolean> = context.dataStore.data
+        .map { prefs -> prefs[EMAIL_KEY] ?: true }
+
+    suspend fun saveEmailPreference(isEnabled: Boolean) {
+        context.dataStore.edit { prefs ->
+            prefs[EMAIL_KEY] = isEnabled
+        }
     }
 }

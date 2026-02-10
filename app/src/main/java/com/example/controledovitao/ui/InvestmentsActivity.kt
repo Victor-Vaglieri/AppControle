@@ -28,8 +28,10 @@ class InvestmentsActivity : AppCompatActivity() {
     private fun setupList() {
         binding.recyclerInvestments.layoutManager = LinearLayoutManager(this)
 
-        viewModel.investmentsList.observe(this) { items ->
-            binding.recyclerInvestments.adapter = InvestmentsAdapter(items)
+        val adapter = InvestmentsAdapter()
+        binding.recyclerInvestments.adapter = adapter
+        viewModel.investmentsList.observe(this) { lista ->
+            adapter.updateList(lista)
         }
     }
 }

@@ -1,41 +1,56 @@
 package com.example.controledovitao.viewmodel
 
+import android.app.Application
 import android.net.Uri
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.controledovitao.data.repository.ConfigRepository
+import kotlinx.coroutines.launch
 
-class ConfigViewModel : ViewModel() {
-    private val repository = ConfigRepository()
+class ConfigViewModel(application: Application) : AndroidViewModel(application) {
 
-    var userName: String = ""
-        private set
+    private val repository = ConfigRepository(application)
+    private val _userName = MutableLiveData<String>()
+    val userName: LiveData<String> = _userName
 
-    var image: Uri? = null
-        private set
+    private val _userPhoto = MutableLiveData<Uri?>()
+    val userPhoto: LiveData<Uri?> = _userPhoto
+
+    val isThemeDark = repository.isThemeDark.asLiveData()
+    val isBackupEnabled = repository.isBackupEnabled.asLiveData()
+    val isBiometricEnabled = repository.isBiometricEnabled.asLiveData()
+    val isDataCollectionEnabled = repository.isDataCollectionEnabled.asLiveData()
 
     init {
         loadUserData()
     }
 
     private fun loadUserData() {
-        userName = repository.getUserName()
-        image = repository.getProfileImage()
+        _userPhoto.value = repository.getProfileImage()
+        viewModelScope.launch {
+            _userName.value = repository.getUserName()
+        }
     }
 
 
-    fun updateTheme(option: Boolean) {
-        repository.saveThemePreference(option)
+    fun toggleTheme(enabled: Boolean) {
+        viewModelScope.launch {
+            repository.saveThemePreference(enabled)
+        }
     }
 
-    fun updateBackup(option: Boolean) {
-        repository.saveBackupPreference(option)
+    fun toggleBackup(enabled: Boolean) {
+        viewModelScope.launch { repository.saveBackupPreference(enabled) }
     }
 
-    fun updateBiometria(option: Boolean) {
-        repository.saveBiometricPreference(option)
+    fun toggleBiometric(enabled: Boolean) {
+        viewModelScope.launch { repository.saveBiometricPreference(enabled) }
     }
 
-    fun updateColeta(option: Boolean) {
-        repository.saveDataCollectionPreference(option)
+    fun toggleDataCollection(enabled: Boolean) {
+        viewModelScope.launch { repository.saveDataCollectionPreference(enabled) }
     }
 }

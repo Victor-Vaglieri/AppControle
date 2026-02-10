@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.example.controledovitao.R
-import com.example.controledovitao.data.repository.SimulationType
+import com.example.controledovitao.data.model.SimulationType
 import com.example.controledovitao.databinding.SimulatorBinding
 import com.example.controledovitao.viewmodel.SimulatorViewModel
 import com.example.controledovitao.ui.adapter.SimulatorOptionAdapter

@@ -4,16 +4,22 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.example.controledovitao.data.model.Invest // Seu Import
+import com.example.controledovitao.data.model.Invest
 import com.example.controledovitao.databinding.ItemInvestmentBinding
 import java.text.NumberFormat
+import java.time.Period
 import java.util.Locale
 
-class InvestmentsAdapter(
-    private val items: List<Invest>
-) : RecyclerView.Adapter<InvestmentsAdapter.InvestmentViewHolder>() {
+class InvestmentsAdapter : RecyclerView.Adapter<InvestmentsAdapter.InvestmentViewHolder>() {
 
-    inner class InvestmentViewHolder(val binding: ItemInvestmentBinding) :
+    private var items: List<Invest> = emptyList()
+
+    fun updateList(newItems: List<Invest>) {
+        this.items = newItems
+        notifyDataSetChanged()
+    }
+
+    inner class InvestmentViewHolder(private val binding: ItemInvestmentBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Invest) {
@@ -22,22 +28,24 @@ class InvestmentsAdapter(
 
             binding.tvTitle.text = item.name
 
-            val anos = item.period.years
-            val meses = item.period.months
+            val periodoObj = item.periodAsObject ?: Period.ZERO
+
+            val anos = periodoObj.years
+            val meses = periodoObj.months
 
             val textoPeriodo = StringBuilder()
             if (anos > 0) textoPeriodo.append("$anos ANO(S) ")
             if (anos > 0 && meses > 0) textoPeriodo.append("E ")
             if (meses > 0) textoPeriodo.append("$meses MES(ES)")
 
-            binding.tvBadge.text = textoPeriodo.toString().trim()
+            val textoFinal = textoPeriodo.toString().trim()
+            binding.tvBadge.text = if (textoFinal.isEmpty()) "RECENTE" else textoFinal
 
             binding.tvInvested.text = formatter.format(item.value)
-
-            val rendimento = item.estimate.subtract(item.value)
-            binding.tvYield.text = "+${formatter.format(rendimento)}"
-
             binding.tvTotal.text = formatter.format(item.estimate)
+
+            val rendimento = item.estimateAsBigDecimal.subtract(item.valueAsBigDecimal)
+            binding.tvYield.text = "+${formatter.format(rendimento)}"
 
             binding.btnEdit.setOnClickListener {
                 Toast.makeText(binding.root.context, "Editar ${item.name}", Toast.LENGTH_SHORT).show()
