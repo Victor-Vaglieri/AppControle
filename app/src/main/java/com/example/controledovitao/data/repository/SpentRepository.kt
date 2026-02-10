@@ -1,100 +1,74 @@
 package com.example.controledovitao.data.repository
 
+import android.util.Log
 import com.example.controledovitao.data.model.Options
 import com.example.controledovitao.data.model.Payment
 import com.example.controledovitao.data.model.Spent
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.toObject
 import java.math.BigDecimal
-import java.time.LocalDate
 
 class SpentRepository {
 
-    private val fakePayment = listOf(
-        Payment(
-            "Visa Crédito",
-            Options.CREDIT,
-            BigDecimal("3000"),
-            BigDecimal("2000"),
-            BigDecimal("1000"),
-            23,
-            1,
-            mutableListOf(
-                Spent(
-                    name = "Almoço",
-                    value = BigDecimal("35.00"),
-                    times = 2,
-                    spentDate = System.currentTimeMillis()
-                ),
-                Spent(
-                    name = "Uber",
-                    value = BigDecimal("18.50"),
-                    times = 1,
-                    spentDate = System.currentTimeMillis() - 86400000
-                )
-            )
-        ),
-        Payment(
-            "Visa Débito",
-            Options.DEBIT,
-            BigDecimal("3000"),
-            null,
-            null,
-            null,
-            null,
-            mutableListOf()
-        ),
-        Payment(
-            "Master Crédito",
-            Options.CREDIT,
-            BigDecimal("1500"),
-            BigDecimal("500"),
-            BigDecimal.ZERO,
-            8,
-            15,
-            mutableListOf()
-        ),
-        Payment(
-            "Master Débito",
-            Options.DEBIT,
-            BigDecimal("10.54"),
-            null,
-            null,
-            null,
-            null,
-            mutableListOf()
-        ),
-        Payment(
-            "PIX",
-            Options.MONEY,
-            BigDecimal("23.40"),
-            null,
-            null,
-            null,
-            null,
-            mutableListOf()
-        )
-    )
+    private val db = Firebase.firestore
+    private val collection = db.collection("payment_methods")
 
-    fun getMethods(): List<Payment> {
-        return fakePayment
-    }
+    fun saveExpense(
+        title: String,
+        methodName: String,
+        value: BigDecimal,
+        installments: Int,
+        date: Long,
+        onResult: (Boolean) -> Unit
+    ) {
+        collection.whereEqualTo("name", methodName)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    Log.e("SpentRepo", "Cartão não encontrado: $methodName")
+                    onResult(false)
+                    return@addOnSuccessListener
+                }
 
-    fun save(title: String, method: String, value: BigDecimal, installments: Int, date: Long): Boolean {
+                val document = documents.documents.first()
+                val payment = document.toObject<Payment>()
 
-        // 1. Cria o objeto Spent novo
-        val newSpent = Spent(
-            name = title,
-            value = value,
-            times = installments,
-            spentDate = date
-        )
+                if (payment != null) {
+                    val newSpent = Spent(
+                        name = title,
+                        value = value.toDouble(),
+                        times = installments,
+                        spentDate = date
+                    )
 
-        val paymentFound = fakePayment.find { it.name == method }
+                    payment.spent.add(newSpent)
 
-        if (paymentFound != null) {
-            paymentFound.spent.add(newSpent)
-            println("Gasto salvo no FAKE DB: $newSpent em $method")
-            return true
-        }
-        return false
+                    if (payment.option == Options.CREDIT) {
+                        payment.balance = payment.balance - newSpent.value
+                        val usoAtual = payment.usage ?: 0.0
+                        payment.usage = usoAtual + newSpent.value
+                    } else if (payment.option == Options.DEBIT || payment.option == Options.MONEY) {
+                        payment.balance = payment.balance - newSpent.value
+                    }
+
+                    collection.document(document.id).set(payment)
+                        .addOnSuccessListener {
+                            Log.d("SpentRepo", "Gasto salvo e saldo atualizado!")
+                            onResult(true)
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e("SpentRepo", "Erro ao atualizar cartão", e)
+                            onResult(false)
+                        }
+
+                } else {
+                    onResult(false)
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("SpentRepo", "Erro ao buscar cartão", e)
+                onResult(false)
+            }
     }
 }
