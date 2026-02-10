@@ -8,14 +8,13 @@ import java.math.BigDecimal
 
 class SpentViewModel : ViewModel() {
 
-    private val repository = SpentRepository()
+    private val repository = SpentRepository
 
     private val _saveSuccess = MutableLiveData<Boolean>()
     val saveSuccess: LiveData<Boolean> = _saveSuccess
 
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = _errorMessage
-
 
     fun saveExpense(title: String, method: String, value: BigDecimal, installments: Int, date: Long) {
         if (title.isBlank()) {
@@ -30,17 +29,12 @@ class SpentViewModel : ViewModel() {
             _errorMessage.value = "Número de parcelas inválido"
             return
         }
-
-        try {
-            repository.saveExpense(title, method, value, installments, date) { sucesso ->
-                if (sucesso) {
-                    _saveSuccess.value = true
-                } else {
-                    _errorMessage.value = "Erro ao salvar no banco de dados. Verifique sua conexão."
-                }
+        repository.saveExpense(title, method, value, installments, date) { sucesso ->
+            if (sucesso) {
+                _saveSuccess.value = true
+            } else {
+                _errorMessage.value = "Erro ao salvar. Verifique a internet ou se o cartão existe."
             }
-        } catch (e: Exception) {
-            _errorMessage.value = "Erro interno: ${e.message}"
         }
     }
 }

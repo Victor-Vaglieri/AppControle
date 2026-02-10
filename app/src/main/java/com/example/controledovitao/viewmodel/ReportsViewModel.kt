@@ -9,6 +9,7 @@ import com.example.controledovitao.ui.adapter.ChartData
 class ReportsViewModel : ViewModel() {
 
     private val repository = ReportsRepository()
+
     private val _charts = MutableLiveData<List<ChartData>>()
     val charts: LiveData<List<ChartData>> = _charts
 
@@ -19,11 +20,14 @@ class ReportsViewModel : ViewModel() {
     val daysCount: LiveData<Int> = _daysCount
 
     init {
-        loadCharts()
+        startListening()
     }
 
-    private fun loadCharts() {
-        _charts.value = repository.getCharts()
+    private fun startListening() {
+        repository.listenToChartsData { chartDataList ->
+            _charts.value = chartDataList
+
+        }
     }
 
     fun changeLimit(delta: Int) {
@@ -33,6 +37,7 @@ class ReportsViewModel : ViewModel() {
 
     fun changeDays(delta: Int) {
         val current = _daysCount.value ?: 0
-        _daysCount.value = (current + delta).coerceAtLeast(1)
+        val novoValor = (current + delta).coerceAtLeast(1)
+        _daysCount.value = novoValor
     }
 }

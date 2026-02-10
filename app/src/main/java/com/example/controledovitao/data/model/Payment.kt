@@ -14,9 +14,9 @@ data class Payment(
     val id: String = "",
     val name: String = "",
     val optionType: String = Options.CREDIT.op,
-    val balance: Double = 0.0,
+    var balance: Double = 0.0,
     val limit: Double? = null,
-    val usage: Double? = null,
+    var usage: Double? = null,
     val bestDate: Int? = null,
     val shutdown: Int? = null,
 

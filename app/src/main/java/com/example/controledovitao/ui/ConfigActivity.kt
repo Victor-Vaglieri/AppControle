@@ -1,17 +1,23 @@
 package com.example.controledovitao.ui
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
+import com.example.controledovitao.R
 import com.example.controledovitao.databinding.ConfigBinding
 import com.example.controledovitao.viewmodel.ConfigViewModel
 
 class ConfigActivity : AppCompatActivity() {
     private lateinit var binding: ConfigBinding
     private lateinit var viewModel: ConfigViewModel
+    private var isProgrammaticChange = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,46 +29,60 @@ class ConfigActivity : AppCompatActivity() {
 
         TopBarHelper.setupTopBar(this, binding.topBar)
 
-        setupUser()
-        setupListener()
+        setupObservers()
+        setupListeners()
     }
 
-    private fun setupUser() {
-        val image = viewModel.image
-        val userName = viewModel.userName
-
-        if (image != null) {
-            binding.userIcon.imageTintList = null
-            binding.userIcon.scaleType = android.widget.ImageView.ScaleType.CENTER_CROP
-            binding.userIcon.setImageURI(image)
+    private fun setupObservers() {
+        viewModel.userName.observe(this) { name ->
+            binding.tvUserName.text = name
         }
-        binding.tvUserName.text = userName
-    }
 
-    private fun setupListener() {
-        binding.switchTheme.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.updateTheme(isChecked)
-
-            if (isChecked) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        viewModel.userPhoto.observe(this) { uri ->
+            if (uri != null) {
+                Glide.with(this).load(uri).circleCrop().into(binding.userIcon)
+                binding.userIcon.setImageURI(uri)
             }
         }
 
+        viewModel.isThemeDark.observe(this) { isDark ->
+            updateSwitchSilently(binding.switchTheme, isDark)
+            val mode = if (isDark) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+            AppCompatDelegate.setDefaultNightMode(mode)
+        }
+
+        viewModel.isBackupEnabled.observe(this) { isEnabled ->
+            updateSwitchSilently(binding.switchBackup, isEnabled)
+        }
+
+        viewModel.isBiometricEnabled.observe(this) { isEnabled ->
+            updateSwitchSilently(binding.switchBio, isEnabled)
+        }
+
+        viewModel.isDataCollectionEnabled.observe(this) { isEnabled ->
+            updateSwitchSilently(binding.switchColeta, isEnabled)
+        }
+    }
+
+    private fun setupListeners() {
+        binding.switchTheme.setOnCheckedChangeListener { _, isChecked ->
+            if (isProgrammaticChange) return@setOnCheckedChangeListener
+            viewModel.toggleTheme(isChecked)
+        }
+
         binding.switchBackup.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.updateBackup(isChecked)
-            if (isChecked) Toast.makeText(this, "Backup ativado", Toast.LENGTH_SHORT).show()
+            if (isProgrammaticChange) return@setOnCheckedChangeListener
+            viewModel.toggleBackup(isChecked)
+            if (isChecked) Toast.makeText(this, "Backup automático ativado", Toast.LENGTH_SHORT).show()
         }
-
         binding.switchBio.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.updateBiometria(isChecked)
+            if (isProgrammaticChange) return@setOnCheckedChangeListener
+            viewModel.toggleBiometric(isChecked)
         }
-
-        // TODO talvez
 
         binding.switchColeta.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.updateColeta(isChecked)
+            if (isProgrammaticChange) return@setOnCheckedChangeListener
+            viewModel.toggleDataCollection(isChecked)
         }
 
         binding.btnNotifications.setOnClickListener {
@@ -70,18 +90,38 @@ class ConfigActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        binding.cardProfile.setOnClickListener {
-            Toast.makeText(this, "Abrir Galeria", Toast.LENGTH_SHORT).show()
-        }
-
-
         binding.tvUserName.setOnClickListener {
             abrirDialogEditarNome()
         }
     }
 
+
+    private fun updateSwitchSilently(switch: android.widget.CompoundButton, isChecked: Boolean) {
+        if (switch.isChecked != isChecked) {
+            isProgrammaticChange = true
+            switch.isChecked = isChecked
+            isProgrammaticChange = false
+        }
+    }
+
     private fun abrirDialogEditarNome() {
-        // TODO: Criar um AlertDialog com um EditText dentro para mudar o nome
-        Toast.makeText(this, "Editar nome do usuário", Toast.LENGTH_SHORT).show()
+        val input = EditText(this)
+        input.hint = "Novo nome"
+
+        input.setText(binding.tvUserName.text)
+
+        AlertDialog.Builder(this)
+            .setTitle("Editar Nome")
+            .setView(input)
+            .setPositiveButton("Salvar") { _, _ ->
+                val novoNome = input.text.toString()
+                if (novoNome.isNotEmpty()) {
+                    // TODO: Chamar viewModel.updateName(novoNome) se você criar essa função
+                    Toast.makeText(this, "Nome salvo localmente (implementar no VM)", Toast.LENGTH_SHORT).show()
+                    binding.tvUserName.text = novoNome
+                }
+            }
+            .setNegativeButton("Cancelar", null)
+            .show()
     }
 }

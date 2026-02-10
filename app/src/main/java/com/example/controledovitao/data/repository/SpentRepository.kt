@@ -9,7 +9,7 @@ import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
 import java.math.BigDecimal
 
-class SpentRepository {
+object SpentRepository {
 
     private val db = Firebase.firestore
     private val collection = db.collection("payment_methods")
@@ -35,21 +35,26 @@ class SpentRepository {
                 val payment = document.toObject<Payment>()
 
                 if (payment != null) {
+                    val doubleValue = value.toDouble()
+
                     val newSpent = Spent(
                         name = title,
-                        value = value.toDouble(),
+                        value = doubleValue,
                         times = installments,
                         spentDate = date
                     )
 
-                    payment.spent.add(newSpent)
+                    val updatedSpents = payment.spent.toMutableList()
+                    updatedSpents.add(newSpent)
+                    payment.spent = updatedSpents
 
                     if (payment.option == Options.CREDIT) {
-                        payment.balance = payment.balance - newSpent.value
+                        payment.balance = (payment.balance - doubleValue)
                         val usoAtual = payment.usage ?: 0.0
-                        payment.usage = usoAtual + newSpent.value
-                    } else if (payment.option == Options.DEBIT || payment.option == Options.MONEY) {
-                        payment.balance = payment.balance - newSpent.value
+                        payment.usage = usoAtual + doubleValue
+
+                    } else {
+                        payment.balance = (payment.balance - doubleValue)
                     }
 
                     collection.document(document.id).set(payment)
@@ -67,7 +72,7 @@ class SpentRepository {
                 }
             }
             .addOnFailureListener { e ->
-                Log.e("SpentRepo", "Erro ao buscar cartão", e)
+                Log.e("SpentRepo", "Erro ao buscar cartão para salvar gasto", e)
                 onResult(false)
             }
     }
