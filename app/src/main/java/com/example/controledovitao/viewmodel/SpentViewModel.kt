@@ -8,7 +8,7 @@ import java.math.BigDecimal
 
 class SpentViewModel : ViewModel() {
 
-    private val repository = SpentRepository
+    private val repository = SpentRepository()
 
     private val _saveSuccess = MutableLiveData<Boolean>()
     val saveSuccess: LiveData<Boolean> = _saveSuccess

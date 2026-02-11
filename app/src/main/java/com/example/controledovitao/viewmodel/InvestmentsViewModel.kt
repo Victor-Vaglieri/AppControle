@@ -8,7 +8,7 @@ import com.example.controledovitao.data.repository.InvestmentsRepository
 import java.math.BigDecimal
 
 class InvestmentsViewModel : ViewModel() {
-    private val repository = InvestmentsRepository
+    private val repository = InvestmentsRepository()
     private val _investmentsList = MutableLiveData<List<Invest>>()
     val investmentsList: LiveData<List<Invest>> = _investmentsList
 

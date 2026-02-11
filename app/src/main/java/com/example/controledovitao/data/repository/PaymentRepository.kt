@@ -6,7 +6,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
 
-object PaymentRepository {
+class PaymentRepository {
 
     private val db = Firebase.firestore
     private val collection = db.collection("payment_methods")
