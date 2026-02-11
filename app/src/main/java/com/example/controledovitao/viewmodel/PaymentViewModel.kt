@@ -10,7 +10,7 @@ import java.math.BigDecimal
 
 class PaymentViewModel : ViewModel() {
 
-    private val repository = PaymentRepository
+    private val repository = PaymentRepository()
 
     private val _paymentMethods = MutableLiveData<List<Payment>>()
     val paymentMethods: LiveData<List<Payment>> = _paymentMethods

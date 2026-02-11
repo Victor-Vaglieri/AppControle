@@ -9,7 +9,7 @@ import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
 import java.math.BigDecimal
 
-object SpentRepository {
+class SpentRepository {
 
     private val db = Firebase.firestore
     private val collection = db.collection("payment_methods")

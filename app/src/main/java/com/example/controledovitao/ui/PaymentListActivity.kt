@@ -27,13 +27,12 @@ class PaymentListActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.loadMethods() // Recarrega a lista ao voltar
+        viewModel.loadMethods()
     }
 
     private fun setupObservers() {
         viewModel.paymentMethods.observe(this) { methods ->
             val adapter = PaymentAdapter(methods) { selectedMethod ->
-                // Ao clicar, abre a tela de Edição passando o nome
                 val intent = Intent(this, PaymentEditActivity::class.java)
                 intent.putExtra("METHOD_NAME", selectedMethod.name)
                 startActivity(intent)

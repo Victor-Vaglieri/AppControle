@@ -14,19 +14,16 @@ class PaymentsActivity : AppCompatActivity() {
         binding = PaymentMethodHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Configura TopBar
         TopBarHelper.setupTopBar(this, binding.topBar)
 
         setupListeners()
     }
 
     private fun setupListeners() {
-        // Botão do Card "ADICIONAR"
         binding.btnAdd.setOnClickListener {
             startActivity(Intent(this, PaymentCreateActivity::class.java))
         }
 
-        // Botão do Card "EDITAR" (Vai para a lista para escolher qual editar)
         binding.btnEdit.setOnClickListener {
             startActivity(Intent(this, PaymentListActivity::class.java))
         }

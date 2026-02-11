@@ -12,7 +12,7 @@ import java.util.Calendar
 
 class HomeViewModel : ViewModel() {
 
-    private val paymentRepo = PaymentRepository
+    private val paymentRepo = PaymentRepository()
     private val _totalBalance = MutableLiveData(BigDecimal.ZERO)
     val totalBalance: LiveData<BigDecimal> = _totalBalance
 
