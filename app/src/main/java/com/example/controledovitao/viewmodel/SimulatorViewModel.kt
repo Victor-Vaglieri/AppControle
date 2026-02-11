@@ -1,17 +1,20 @@
 package com.example.controledovitao.viewmodel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.controledovitao.data.model.SimulationOption
 import com.example.controledovitao.data.model.SimulationType
 import com.example.controledovitao.data.repository.SimulationRepository
+import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import kotlin.math.pow
 
-class SimulatorViewModel : ViewModel() {
+class SimulatorViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = SimulationRepository()
+    private val repository = SimulationRepository(application)
 
     private val _currentType = MutableLiveData(SimulationType.BANCO)
     val currentType: LiveData<SimulationType> = _currentType
@@ -48,13 +51,15 @@ class SimulatorViewModel : ViewModel() {
     }
 
     private fun loadOptions(type: SimulationType) {
-        repository.getOptions(type) { optionsEncontradas ->
+        viewModelScope.launch {
+            val optionsEncontradas = repository.getOptions(type)
 
             _availableOptions.value = optionsEncontradas
+
             if (optionsEncontradas.isNotEmpty()) {
                 selectOption(optionsEncontradas[0])
             } else {
-                _infoText.value = "Nenhuma opção encontrada no banco."
+                _infoText.value = "Nenhuma opção encontrada."
                 _infoRate.value = "-"
             }
         }
@@ -75,7 +80,6 @@ class SimulatorViewModel : ViewModel() {
 
         calculate()
     }
-
 
     fun changeValue(delta: BigDecimal) {
         val current = inputValue.value ?: BigDecimal.ZERO

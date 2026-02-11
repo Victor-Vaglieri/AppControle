@@ -1,7 +1,1 @@
-ConfigActivity
-HomeViewModel
-erro a adicionar valor em conta em adicionar metodo de pagamento
-erro no home que não muda ao adicionar
-erro em config que o tema só muda naquela pagina
-colocar api para simulador
-em adicionar gasto o vezes esta desativado quando o metodo é credito
+Simulator o campo de valor não é editavel
