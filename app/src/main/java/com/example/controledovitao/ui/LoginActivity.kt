@@ -34,7 +34,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
 
-        criarContaProvisoria()
+        //criarContaProvisoria()
 
 
         setupObservers()

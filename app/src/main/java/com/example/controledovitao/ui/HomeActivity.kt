@@ -24,11 +24,8 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = HomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
-
         TopBarHelper.setupTopBar(this, binding.topBar)
-
         setupObservers()
         setupOptionsAndMethods()
     }
@@ -46,8 +43,6 @@ class HomeActivity : AppCompatActivity() {
         }
         viewModel.recentSpents.observe(this) { items ->
             binding.containerRecentExpenses.removeAllViews()
-
-
             items.forEach { (title, values, item) ->
                 val view = ExpenseItemView(this).apply {
                     setExpenseTitle(title)
@@ -70,7 +65,6 @@ class HomeActivity : AppCompatActivity() {
         val balance = viewModel.totalBalance.value ?: BigDecimal.ZERO
         val limit = viewModel.totalLimit.value ?: BigDecimal.ZERO
         val usage = viewModel.totalUsage.value ?: BigDecimal.ZERO
-
         val valueProgress = if (limit.compareTo(BigDecimal.ZERO) == 0) {
             0
         } else {
