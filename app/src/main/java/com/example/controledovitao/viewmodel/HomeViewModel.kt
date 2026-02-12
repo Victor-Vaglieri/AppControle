@@ -1,5 +1,6 @@
 package com.example.controledovitao.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,7 +13,8 @@ import java.util.Calendar
 
 class HomeViewModel : ViewModel() {
 
-    private val paymentRepo = PaymentRepository()
+    private val paymentRepo = PaymentRepository
+
     private val _totalBalance = MutableLiveData(BigDecimal.ZERO)
     val totalBalance: LiveData<BigDecimal> = _totalBalance
 
@@ -27,6 +29,7 @@ class HomeViewModel : ViewModel() {
 
     private val _methodNames = MutableLiveData<List<String>>()
     val methodNames: LiveData<List<String>> = _methodNames
+
     private val _recentSpents = MutableLiveData<List<Triple<String, Pair<BigDecimal, Int>, Spent>>>()
     val recentSpents: LiveData<List<Triple<String, Pair<BigDecimal, Int>, Spent>>> = _recentSpents
 
@@ -46,7 +49,10 @@ class HomeViewModel : ViewModel() {
         paymentRepo.listenToMethods { payments ->
             if (payments.isEmpty()) {
                 _errorMessage.value = "Nenhum método de pagamento encontrado"
+                _totalLimit.value = BigDecimal.ZERO
+                _totalBalance.value = BigDecimal.ZERO
             } else {
+                Log.d("HomeViewModel", "Atualizando totais para ${payments.size} métodos")
                 calculateTotals(payments)
                 processSpents(payments)
                 extractMethodNames(payments)
@@ -61,6 +67,8 @@ class HomeViewModel : ViewModel() {
         var uso = BigDecimal.ZERO
 
         payments.forEach { pay ->
+            Log.d("CalcTotal", "Processando: ${pay.name} | Tipo: ${pay.option} | Limite: ${pay.limit}")
+
             saldo = saldo.add(pay.balanceAsBigDecimal)
 
             if (pay.option == Options.CREDIT) {
@@ -72,8 +80,7 @@ class HomeViewModel : ViewModel() {
         _totalBalance.value = saldo
         _totalLimit.value = limite
         _totalUsage.value = uso
-        // TODO: Quando migrar o InvestRepository, somar aqui também
-        _totalInvest.value = BigDecimal.ZERO
+        // _totalInvest.value = ... (Futuro)
     }
 
     private fun processSpents(payments: List<Payment>) {
@@ -86,12 +93,11 @@ class HomeViewModel : ViewModel() {
                 } else {
                     Pair(spent.valueAsBigDecimal, 0)
                 }
-                tempList.add(Triple(spent.name, subtitle, spent))
+                tempList.add(Triple(pay.name, subtitle, spent))
             }
         }
 
         val sorted = tempList.sortedByDescending { it.third.spentDate }
-
         allSpentsCache = sorted
         _recentSpents.value = sorted.take(10)
     }
@@ -103,21 +109,37 @@ class HomeViewModel : ViewModel() {
 
     private fun findBestCard(payments: List<Payment>) {
         val today = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
-        val creditCards = payments.filter { it.option == Options.CREDIT && it.bestDate != null }
+        val creditCards = payments.filter { it.option == Options.CREDIT }
 
-        val best = creditCards.firstOrNull { card ->
-            val bestDate = card.bestDate ?: 0
-            today >= bestDate
-        } ?: creditCards.firstOrNull()
+        if (creditCards.isEmpty()) {
+            _bestCardName.value = "Sem cartões"
+            return
+        }
+        val bestWindow = creditCards.filter { card ->
+            val fechamento = card.bestDate ?: 32
+            val vencimento = card.shutdown ?: 0
 
-        _bestCardName.value = best?.name ?: "Sem recomendação"
+            today >= fechamento && today < vencimento
+        }
+
+        val winner = if (bestWindow.isNotEmpty()) {
+            bestWindow.maxByOrNull { (it.limit ?: 0.0) - (it.usage ?: 0.0) }
+        } else {
+            creditCards.maxByOrNull { card ->
+                val fechamento = card.bestDate ?: 0
+                if (fechamento > today) fechamento - today else 30 + (fechamento - today)
+            }
+        }
+
+        _bestCardName.value = winner?.name ?: "Indisponível"
     }
-
+    
     fun filterSpents(methodName: String) {
         if (methodName.equals("TODOS", ignoreCase = true)) {
             _recentSpents.value = allSpentsCache.take(10)
         } else {
-            _recentSpents.value = allSpentsCache
+            val filtered = allSpentsCache.filter { it.first.equals(methodName, ignoreCase = true) }
+            _recentSpents.value = filtered
         }
     }
 }

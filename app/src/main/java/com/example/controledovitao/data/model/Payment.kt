@@ -45,7 +45,14 @@ enum class Options(val op: String) {
 
     companion object {
         fun getByOp(value: String): Options {
-            return entries.find { it.op == value } ?: MONEY
+            return when (value.lowercase(java.util.Locale.ROOT)) {
+                "credit", "crédito", "credito", "crèdito" -> CREDIT
+                "debit", "débito", "debito" -> DEBIT
+                "money", "dinheiro" -> MONEY
+                else -> {
+                    entries.find { it.name.equals(value, ignoreCase = true) } ?: MONEY
+                }
+            }
         }
     }
 }

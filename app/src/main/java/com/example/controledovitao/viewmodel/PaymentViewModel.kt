@@ -10,7 +10,7 @@ import java.math.BigDecimal
 
 class PaymentViewModel : ViewModel() {
 
-    private val repository = PaymentRepository()
+    private val repository = PaymentRepository
 
     private val _paymentMethods = MutableLiveData<List<Payment>>()
     val paymentMethods: LiveData<List<Payment>> = _paymentMethods
@@ -38,11 +38,12 @@ class PaymentViewModel : ViewModel() {
     }
 
     fun createPayment(name: String, type: String, limit: Double, balance: Double, closeDay: Int, dueDay: Int) {
-        val typeEnum = if (type.equals("Crédito", ignoreCase = true)) Options.CREDIT else Options.DEBIT
+        val typeEnum = Options.getByOp(type)
 
         val newPayment = Payment(
+            id = "",
             name = name,
-            optionType = typeEnum.name,
+            optionType = typeEnum.op,
             balance = balance,
             limit = limit,
             usage = 0.0,
@@ -65,13 +66,11 @@ class PaymentViewModel : ViewModel() {
             return
         }
 
-
         val updatedPayment = originalPayment.copy(
             name = name,
             limit = limit,
             bestDate = closeDay,
             shutdown = dueDay
-
         )
 
         repository.updateMethod(updatedPayment) { success ->
