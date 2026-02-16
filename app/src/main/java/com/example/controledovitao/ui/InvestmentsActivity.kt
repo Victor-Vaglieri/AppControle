@@ -23,6 +23,7 @@ class InvestmentsActivity : AppCompatActivity() {
         TopBarHelper.setupTopBar(this, binding.topBar)
 
         setupList()
+        setupListeners()
     }
 
     private fun setupList() {
@@ -34,4 +35,11 @@ class InvestmentsActivity : AppCompatActivity() {
             adapter.updateList(lista)
         }
     }
+
+    private fun setupListeners() {
+        binding.btnBack.setOnClickListener {
+            finish()
+        }
+    }
+
 }

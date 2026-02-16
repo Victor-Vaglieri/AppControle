@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.example.controledovitao.data.model.Options
 import com.example.controledovitao.data.model.Payment
 import com.example.controledovitao.data.model.Spent
+import com.example.controledovitao.data.repository.InvestmentsRepository
 import com.example.controledovitao.data.repository.PaymentRepository
 import java.math.BigDecimal
 import java.util.Calendar
@@ -14,7 +15,7 @@ import java.util.Calendar
 class HomeViewModel : ViewModel() {
 
     private val paymentRepo = PaymentRepository
-
+    private val investRepo = InvestmentsRepository
     private val _totalBalance = MutableLiveData(BigDecimal.ZERO)
     val totalBalance: LiveData<BigDecimal> = _totalBalance
 
@@ -38,54 +39,117 @@ class HomeViewModel : ViewModel() {
 
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = _errorMessage
-
+    private var cachedPayments = listOf<Payment>()
     private var allSpentsCache = listOf<Triple<String, Pair<BigDecimal, Int>, Spent>>()
 
+    private val _selectedPaymentMethod = MutableLiveData<Payment?>()
+    val selectedPaymentMethod: LiveData<Payment?> = _selectedPaymentMethod
+
     init {
-        startListening()
+        startListeningPayments()
+        startListeningInvestments()
     }
 
-    private fun startListening() {
+    private fun startListeningPayments() {
         paymentRepo.listenToMethods { payments ->
+            cachedPayments = payments
+
             if (payments.isEmpty()) {
-                _errorMessage.value = "Nenhum método de pagamento encontrado"
+                _errorMessage.value = "Nenhum método encontrado"
                 _totalLimit.value = BigDecimal.ZERO
                 _totalBalance.value = BigDecimal.ZERO
             } else {
-                Log.d("HomeViewModel", "Atualizando totais para ${payments.size} métodos")
-                calculateTotals(payments)
+                calculatePaymentTotals(payments)
                 processSpents(payments)
                 extractMethodNames(payments)
                 findBestCard(payments)
+
+                val currentSelection = _selectedPaymentMethod.value
+                if (currentSelection != null) {
+                    val updatedVersion = payments.find { it.id == currentSelection.id }
+                    if (updatedVersion != null) {
+                        _selectedPaymentMethod.value = updatedVersion
+                    } else {
+                        selectMethod("TODOS")
+                    }
+                }
             }
         }
     }
 
-    private fun calculateTotals(payments: List<Payment>) {
+    private fun startListeningInvestments() {
+        investRepo.listenToInvestments { investments ->
+            val total = investments.sumOf { it.value }
+            _totalInvest.value = BigDecimal.valueOf(total)
+        }
+    }
+
+    fun selectMethod(methodName: String) {
+        if (methodName.equals("TODOS", ignoreCase = true)) {
+            _selectedPaymentMethod.value = null
+            filterSpents("TODOS")
+        } else {
+            val found = cachedPayments.find { it.name.equals(methodName, ignoreCase = true) }
+            if (found != null) {
+                _selectedPaymentMethod.value = found
+                filterSpents(methodName)
+            }
+        }
+    }
+
+    fun filterSpents(methodName: String) {
+        if (methodName.equals("TODOS", ignoreCase = true)) {
+            _recentSpents.value = allSpentsCache.take(10)
+        } else {
+            val filtered = allSpentsCache.filter { it.first.equals(methodName, ignoreCase = true) }
+            _recentSpents.value = filtered
+        }
+    }
+
+    fun updateSelectedCardLimit(delta: Double) {
+        val currentCard = _selectedPaymentMethod.value ?: return
+        val newLimit = ((currentCard.limit ?: 0.0) + delta).coerceAtLeast(0.0)
+
+        val updatedCard = currentCard.copy(limit = newLimit)
+        paymentRepo.updateMethod(updatedCard) { }
+    }
+
+    fun updateSelectedCardBalance(delta: Double) {
+        val currentCard = _selectedPaymentMethod.value ?: return
+        val newBalance = currentCard.balance + delta
+
+        val updatedCard = currentCard.copy(balance = newBalance)
+        paymentRepo.updateMethod(updatedCard) { }
+    }
+
+    fun closeInvoice() {
+        val currentCard = _selectedPaymentMethod.value ?: return
+        val updatedCard = currentCard.copy(usage = 0.0)
+
+        paymentRepo.updateMethod(updatedCard) { success ->
+            if (success) _errorMessage.value = "Fatura fechada!"
+        }
+    }
+
+    private fun calculatePaymentTotals(payments: List<Payment>) {
         var saldo = BigDecimal.ZERO
         var limite = BigDecimal.ZERO
         var uso = BigDecimal.ZERO
 
         payments.forEach { pay ->
-            Log.d("CalcTotal", "Processando: ${pay.name} | Tipo: ${pay.option} | Limite: ${pay.limit}")
-
             saldo = saldo.add(pay.balanceAsBigDecimal)
-
             if (pay.option == Options.CREDIT) {
                 pay.limitAsBigDecimal?.let { limite = limite.add(it) }
                 pay.usageAsBigDecimal?.let { uso = uso.add(it) }
             }
         }
-
         _totalBalance.value = saldo
         _totalLimit.value = limite
         _totalUsage.value = uso
-        // _totalInvest.value = ... (Futuro)
     }
 
     private fun processSpents(payments: List<Payment>) {
         val tempList = mutableListOf<Triple<String, Pair<BigDecimal, Int>, Spent>>()
-
         payments.forEach { pay ->
             pay.spent.forEach { spent ->
                 val subtitle = if (spent.times > 1) {
@@ -96,15 +160,14 @@ class HomeViewModel : ViewModel() {
                 tempList.add(Triple(pay.name, subtitle, spent))
             }
         }
+        allSpentsCache = tempList.sortedByDescending { it.third.spentDate }
 
-        val sorted = tempList.sortedByDescending { it.third.spentDate }
-        allSpentsCache = sorted
-        _recentSpents.value = sorted.take(10)
+        val currentName = _selectedPaymentMethod.value?.name ?: "TODOS"
+        filterSpents(currentName)
     }
 
     private fun extractMethodNames(payments: List<Payment>) {
-        val names = payments.map { it.name }
-        _methodNames.value = names
+        _methodNames.value = payments.map { it.name }
     }
 
     private fun findBestCard(payments: List<Payment>) {
@@ -115,10 +178,10 @@ class HomeViewModel : ViewModel() {
             _bestCardName.value = "Sem cartões"
             return
         }
+
         val bestWindow = creditCards.filter { card ->
             val fechamento = card.bestDate ?: 32
             val vencimento = card.shutdown ?: 0
-
             today >= fechamento && today < vencimento
         }
 
@@ -130,16 +193,6 @@ class HomeViewModel : ViewModel() {
                 if (fechamento > today) fechamento - today else 30 + (fechamento - today)
             }
         }
-
         _bestCardName.value = winner?.name ?: "Indisponível"
-    }
-    
-    fun filterSpents(methodName: String) {
-        if (methodName.equals("TODOS", ignoreCase = true)) {
-            _recentSpents.value = allSpentsCache.take(10)
-        } else {
-            val filtered = allSpentsCache.filter { it.first.equals(methodName, ignoreCase = true) }
-            _recentSpents.value = filtered
-        }
     }
 }

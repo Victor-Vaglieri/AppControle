@@ -107,21 +107,6 @@
                     android:thumb="@drawable/switch_thumb_selector"
                     app:track="@drawable/switch_track_selector" />
 
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/switchBackup"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="24dp"
-                    android:minHeight="48dp"
-                    android:text="Backup automático (Drive)"
-                    android:textColor="@color/neutral_dark_darkest"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:checked="true"
-                    app:thumbTint="@null"
-                    app:trackTint="@null"
-                    android:thumb="@drawable/switch_thumb_selector"
-                    app:track="@drawable/switch_track_selector" />
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/switchBio"

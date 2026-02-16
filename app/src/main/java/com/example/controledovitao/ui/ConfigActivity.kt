@@ -51,9 +51,6 @@ class ConfigActivity : AppCompatActivity() {
             AppCompatDelegate.setDefaultNightMode(mode)
         }
 
-        viewModel.isBackupEnabled.observe(this) { isEnabled ->
-            updateSwitchSilently(binding.switchBackup, isEnabled)
-        }
 
         viewModel.isBiometricEnabled.observe(this) { isEnabled ->
             updateSwitchSilently(binding.switchBio, isEnabled)
@@ -70,11 +67,6 @@ class ConfigActivity : AppCompatActivity() {
             viewModel.toggleTheme(isChecked)
         }
 
-        binding.switchBackup.setOnCheckedChangeListener { _, isChecked ->
-            if (isProgrammaticChange) return@setOnCheckedChangeListener
-            viewModel.toggleBackup(isChecked)
-            if (isChecked) Toast.makeText(this, "Backup automático ativado", Toast.LENGTH_SHORT).show()
-        }
         binding.switchBio.setOnCheckedChangeListener { _, isChecked ->
             if (isProgrammaticChange) return@setOnCheckedChangeListener
             viewModel.toggleBiometric(isChecked)

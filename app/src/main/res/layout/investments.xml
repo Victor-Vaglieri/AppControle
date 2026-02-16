@@ -40,6 +40,16 @@
                 android:nestedScrollingEnabled="false"
                 tools:listitem="@layout/item_investment"/>
 
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnBack"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/bg_button_outline"
+                android:text="Voltar"
+                android:textColor="@color/highlight_darkest"
+                android:textStyle="bold"/>
+
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,10 +6,11 @@ import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
 
-class InvestmentsRepository {
+object InvestmentsRepository {
 
     private val db = Firebase.firestore
     private val collection = db.collection("investments")
+
     fun listenToInvestments(onUpdate: (List<Invest>) -> Unit) {
         collection.addSnapshotListener { snapshot, error ->
             if (error != null) {
