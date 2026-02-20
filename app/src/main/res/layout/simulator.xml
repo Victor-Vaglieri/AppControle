@@ -35,7 +35,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="16dp"
-                android:background="@color/neutral_light_light"
+                android:background="@drawable/bg_tab_active"
+                android:backgroundTint="@color/neutral_light_light"
                 android:orientation="horizontal"
                 android:padding="4dp">
 
@@ -143,11 +144,14 @@
                                 android:src="@drawable/icon_minus"
                                 app:tint="@color/highlight_darkest" />
 
-                            <TextView
+                            <EditText
                                 android:id="@+id/txtValue"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginHorizontal="16dp"
+                                android:background="@null"
+                                android:imeOptions="actionDone"
+                                android:inputType="numberDecimal"
                                 android:text="1.500,00"
                                 android:textColor="@color/neutral_dark_darkest"
                                 android:textSize="16sp" />
@@ -285,6 +289,7 @@
                         </LinearLayout>
 
                         <ImageView
+                            android:id="@+id/btnInfo"
                             android:layout_width="34dp"
                             android:layout_height="34dp"
                             android:src="@drawable/icon_info"/>

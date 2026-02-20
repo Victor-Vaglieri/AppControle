@@ -1,7 +1,11 @@
 package com.example.controledovitao.ui
 
+import android.content.Context
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -89,9 +93,46 @@ class PaymentCreateActivity : AppCompatActivity() {
             toggleTypeMenu()
         }
 
+        binding.tvLimitValue.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE || event?.keyCode == KeyEvent.KEYCODE_ENTER) {
+                val cleanStr = v.text.toString().replace(".", "").replace(",", ".")
+                limitValue = cleanStr.toDoubleOrNull() ?: limitValue
+                updateLimitText()
+
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(v.windowToken, 0)
+                v.clearFocus()
+                true
+            } else {
+                false
+            }
+        }
+
+        // --- ALTERAÇÃO: Capturar valor digitado manualmente no Saldo ---
+        binding.tvBalanceValue.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE || event?.keyCode == KeyEvent.KEYCODE_ENTER) {
+                val cleanStr = v.text.toString().replace(".", "").replace(",", ".")
+                balanceValue = cleanStr.toDoubleOrNull() ?: balanceValue
+                updateBalanceText()
+
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(v.windowToken, 0)
+                v.clearFocus()
+                true
+            } else {
+                false
+            }
+        }
+
         binding.btnAdd.setOnClickListener {
             val name = binding.etMethodName.text.toString()
             val type = binding.spinnerType.text.toString()
+
+            val currentLimitStr = binding.tvLimitValue.text.toString().replace(".", "").replace(",", ".")
+            limitValue = currentLimitStr.toDoubleOrNull() ?: limitValue
+
+            val currentBalanceStr = binding.tvBalanceValue.text.toString().replace(".", "").replace(",", ".")
+            balanceValue = currentBalanceStr.toDoubleOrNull() ?: balanceValue
 
             if (name.isNotEmpty()) {
                 viewModel.createPayment(

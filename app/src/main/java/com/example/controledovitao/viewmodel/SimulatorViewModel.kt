@@ -100,6 +100,12 @@ class SimulatorViewModel(application: Application) : AndroidViewModel(applicatio
         calculate()
     }
 
+    fun setExactValue(value: BigDecimal) {
+        val safeValue = value.max(BigDecimal.ZERO)
+        inputValue.value = safeValue
+        calculate()
+    }
+
     private fun calculate() {
         val principal = inputValue.value ?: BigDecimal.ZERO
         val years = inputYears.value ?: 0

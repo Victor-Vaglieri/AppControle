@@ -1,18 +1,23 @@
 package com.example.controledovitao.ui
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.controledovitao.R
 import com.example.controledovitao.data.model.SimulationType
 import com.example.controledovitao.databinding.SimulatorBinding
-import com.example.controledovitao.viewmodel.SimulatorViewModel
 import com.example.controledovitao.ui.adapter.SimulatorOptionAdapter
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.controledovitao.viewmodel.SimulatorViewModel
 import java.math.BigDecimal
 import java.text.NumberFormat
 import java.util.Locale
@@ -60,20 +65,16 @@ class SimulatorInvestActivity : AppCompatActivity() {
     }
 
     private fun setupInputs() {
-        // Lógica de Expandir/Recolher ao clicar no campo "Spinner"
         binding.spinnerInvestment.setOnClickListener {
             if (binding.recyclerOptions.visibility == View.VISIBLE) {
-                // Fechar
                 binding.recyclerOptions.visibility = View.GONE
                 binding.spinnerInvestment.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_down, 0)
             } else {
-                // Abrir
                 binding.recyclerOptions.visibility = View.VISIBLE
-                binding.spinnerInvestment.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up, 0) // Use seu icon_up
+                binding.spinnerInvestment.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.icon_up, 0)
             }
         }
 
-        // Inputs de Valor e Data (Mantidos iguais)
         binding.btnValPlus.setOnClickListener { viewModel.changeValue(BigDecimal("100")) }
         binding.btnValMinus.setOnClickListener { viewModel.changeValue(BigDecimal("-100")) }
 
@@ -82,11 +83,54 @@ class SimulatorInvestActivity : AppCompatActivity() {
 
         binding.btnMonthPlus.setOnClickListener { viewModel.changeMonths(1) }
         binding.btnMonthMinus.setOnClickListener { viewModel.changeMonths(-1) }
+
+        binding.txtValue.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE || event?.keyCode == KeyEvent.KEYCODE_ENTER) {
+
+                val cleanStr = v.text.toString().replace(".", "").replace(",", ".")
+                val newVal = cleanStr.toBigDecimalOrNull()
+
+                if (newVal != null) {
+                    viewModel.setExactValue(newVal)
+                }
+
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(v.windowToken, 0)
+                v.clearFocus()
+
+                true
+            } else {
+                false
+            }
+        }
+
+        binding.btnInfo.setOnClickListener {
+            val option = viewModel.selectedOption.value ?: return@setOnClickListener
+            val isCripto = viewModel.currentType.value == SimulationType.CRIPTO
+
+            val taxaFormatada = String.format("%.2f", option.annualRate * 100)
+
+            val titulo = "Sobre: ${option.name}"
+            val mensagem = if (isCripto) {
+                "O ativo ${option.name} teve uma variação de $taxaFormatada% no último ano.\n\nAtenção: Criptomoedas são altamente voláteis. O histórico passado serve como base, mas não garante lucros futuros."
+            } else {
+                "Este investimento possui uma rentabilidade média projetada de $taxaFormatada% ao ano.\n\nEste cálculo é uma estimativa baseada nas taxas econômicas atuais (Selic, CDI)."
+            }
+
+            AlertDialog.Builder(this)
+                .setTitle(titulo)
+                .setMessage(mensagem)
+                .setPositiveButton("Entendi", null)
+                .show()
+        }
     }
+
     private fun setupObservers() {
         val localeBR = Locale("pt", "BR")
         val currencyFormat = NumberFormat.getCurrencyInstance(localeBR)
         val numberFormat = NumberFormat.getInstance(localeBR)
+        numberFormat.minimumFractionDigits = 2
+        numberFormat.maximumFractionDigits = 2
 
         viewModel.currentType.observe(this) { type ->
             if (type == SimulationType.BANCO) {
@@ -115,7 +159,6 @@ class SimulatorInvestActivity : AppCompatActivity() {
             binding.spinnerInvestment.text = option.name
         }
 
-        // 3. Atualizar Textos de Info
         viewModel.infoText.observe(this) { text ->
             binding.tvLabelYield.text = text
         }
@@ -123,15 +166,16 @@ class SimulatorInvestActivity : AppCompatActivity() {
             binding.tvRateValue.text = rate
         }
 
-        // 4. Atualizar Inputs
         viewModel.inputValue.observe(this) {
-            binding.txtValue.text = numberFormat.format(it)
+            if (!binding.txtValue.hasFocus()) {
+                binding.txtValue.setText(numberFormat.format(it))
+            }
             binding.resInvested.text = currencyFormat.format(it)
         }
+
         viewModel.inputYears.observe(this) { binding.txtYears.text = "$it Anos" }
         viewModel.inputMonths.observe(this) { binding.txtMonths.text = "$it Meses" }
 
-        // 5. Resultados
         viewModel.resultYield.observe(this) {
             binding.resYield.text = "+ ${currencyFormat.format(it)}"
         }
@@ -143,7 +187,7 @@ class SimulatorInvestActivity : AppCompatActivity() {
     private fun setupNavigation() {
         binding.btnGoToInvestments.setOnClickListener {
             startActivity(Intent(this, InvestmentsActivity::class.java))
-            finish() // Opcional, se quiser fechar o simulador
+            finish()
         }
 
         binding.btnLaunch.setOnClickListener {
