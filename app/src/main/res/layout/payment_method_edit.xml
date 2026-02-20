@@ -126,6 +126,55 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:text="Valor em conta"
+                    android:textColor="@color/neutral_dark_darkest"
+                    android:textStyle="bold"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/btnBalanceMinus"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginEnd="12dp"
+                    android:background="@drawable/bg_circle_button"
+                    android:padding="8dp"
+                    android:src="@drawable/icon_minus"
+                    app:tint="@color/highlight_darkest" />
+
+                <EditText
+                    android:id="@+id/tvBalanceValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="80dp"
+                    android:gravity="center"
+                    android:text="24,56"
+                    android:textColor="@color/neutral_dark_darkest"
+                    android:textSize="20sp"
+                    android:background="@null"
+                    android:inputType="numberDecimal" />
+
+                <ImageView
+                    android:id="@+id/btnBalancePlus"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="12dp"
+                    android:background="@drawable/bg_circle_button"
+                    android:padding="8dp"
+                    android:src="@drawable/icon_plus"
+                    app:tint="@color/highlight_darkest" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="Data de fechamento"
                     android:textColor="@color/neutral_dark_darkest"
                     android:textStyle="bold"

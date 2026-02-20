@@ -56,8 +56,7 @@ class PaymentViewModel : ViewModel() {
             _operationStatus.value = success
         }
     }
-
-    fun updatePayment(originalName: String, name: String, limit: Double, closeDay: Int, dueDay: Int) {
+    fun updatePayment(originalName: String, name: String, limit: Double, balance: Double, closeDay: Int, dueDay: Int) {
         val currentList = _paymentMethods.value ?: emptyList()
         val originalPayment = currentList.find { it.name == originalName }
 
@@ -69,6 +68,7 @@ class PaymentViewModel : ViewModel() {
         val updatedPayment = originalPayment.copy(
             name = name,
             limit = limit,
+            balance = balance,
             bestDate = closeDay,
             shutdown = dueDay
         )

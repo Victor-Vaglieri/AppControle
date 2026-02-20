@@ -11,7 +11,7 @@ import com.example.controledovitao.viewmodel.PaymentViewModel
 
 class PaymentListActivity : AppCompatActivity() {
 
-    private lateinit var binding:PaymentMethodListBinding
+    private lateinit var binding: PaymentMethodListBinding
     private val viewModel: PaymentViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +34,15 @@ class PaymentListActivity : AppCompatActivity() {
         viewModel.paymentMethods.observe(this) { methods ->
             val adapter = PaymentAdapter(methods) { selectedMethod ->
                 val intent = Intent(this, PaymentEditActivity::class.java)
+
+                intent.putExtra("METHOD_ID", selectedMethod.id)
                 intent.putExtra("METHOD_NAME", selectedMethod.name)
+                intent.putExtra("METHOD_TYPE", selectedMethod.optionType)
+                intent.putExtra("METHOD_LIMIT", selectedMethod.limit ?: 0.0)
+                intent.putExtra("METHOD_BALANCE", selectedMethod.balance)
+                intent.putExtra("METHOD_CLOSE", selectedMethod.bestDate ?: 25)
+                intent.putExtra("METHOD_DUE", selectedMethod.shutdown ?: 2)
+
                 startActivity(intent)
             }
             binding.recyclerMethods.layoutManager = LinearLayoutManager(this)
