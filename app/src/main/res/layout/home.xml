@@ -79,7 +79,7 @@
                     android:layout_marginEnd="16dp"
                     android:text="Investido"
                     android:textColor="@color/neutral_light_dark"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     app:layout_constraintEnd_toStartOf="@+id/dividerVertical"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -90,7 +90,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:textColor="@color/neutral_light_darkest"
-                    android:textSize="26sp"
+                    android:textSize="30sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toStartOf="@+id/dividerVertical"
                     app:layout_constraintHorizontal_bias="1.0"
@@ -119,7 +119,7 @@
                     android:layout_marginTop="4dp"
                     android:gravity="end"
                     android:textColor="@color/neutral_dark_darkest"
-                    android:textSize="32sp"
+                    android:textSize="34sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@+id/valInvestido"
                     app:layout_constraintEnd_toEndOf="@+id/labelSaldo"
@@ -135,7 +135,7 @@
                     android:layout_marginTop="24dp"
                     android:text="Limite de crédito"
                     android:textColor="@color/neutral_dark_darkest"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/valInvestido" />
 
@@ -158,7 +158,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="24dp"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     android:layout_marginBottom="4dp"
                     android:textColor="@color/neutral_dark_medium"
                     android:textStyle="bold"
@@ -173,7 +173,7 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="24dp"
                     android:textColor="@color/neutral_dark_medium"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/progressBarLimit"
                     tools:text="2.250,00 / 5.500,00" />
@@ -195,7 +195,7 @@
                         android:layout_height="wrap_content"
                         android:text="Cartão do dia: "
                         android:textColor="@color/neutral_dark_light"
-                        android:textSize="14sp" />
+                        android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/tvBestCardName"
@@ -205,7 +205,7 @@
                         android:text="Nubank Platinum"
                         android:textColor="@color/highlight_darkest"
                         android:textStyle="bold"
-                        android:textSize="18sp" />
+                        android:textSize="22sp" />
                 </LinearLayout>
 
                 <com.google.android.material.card.MaterialCardView

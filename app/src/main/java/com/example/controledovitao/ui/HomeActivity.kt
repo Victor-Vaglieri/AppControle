@@ -190,7 +190,7 @@ class HomeActivity : AppCompatActivity() {
         listaNomes.forEach { nomeMetodo ->
             val chip = TextView(this)
             chip.text = nomeMetodo.uppercase()
-            chip.textSize = 12f
+            chip.textSize = 14f
             chip.typeface = android.graphics.Typeface.DEFAULT_BOLD
 
             val padH = dpToPx(20)
