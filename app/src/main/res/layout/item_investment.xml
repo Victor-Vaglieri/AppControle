@@ -15,7 +15,7 @@
         android:layout_marginEnd="8dp"
         tools:text="Poupança"
         android:textColor="@android:color/white"
-        android:textSize="18sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -43,7 +43,7 @@
         android:layout_marginTop="24dp"
         android:text="Valor investido:"
         android:textColor="@color/neutral_dark_medium"
-        android:textSize="12sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvTitle"/>
 
@@ -53,7 +53,7 @@
         android:layout_height="wrap_content"
         tools:text="R$ 1.500,00"
         android:textColor="@color/neutral_dark_medium"
-        android:textSize="12sp"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBaseline_toBaselineOf="@+id/lblInvested"/>
 
@@ -64,7 +64,7 @@
         android:layout_marginTop="4dp"
         android:text="Rendimento:"
         android:textColor="@color/neutral_dark_medium"
-        android:textSize="12sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lblInvested"/>
 
@@ -74,7 +74,7 @@
         android:layout_height="wrap_content"
         tools:text="+R$ 578,78"
         android:textColor="@color/neutral_dark_medium"
-        android:textSize="12sp"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBaseline_toBaselineOf="@+id/lblYield"/>
 
@@ -93,7 +93,7 @@
         android:layout_marginTop="8dp"
         android:text="Valor total:"
         android:textColor="@color/neutral_dark_medium"
-        android:textSize="12sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider"/>
 
@@ -103,7 +103,7 @@
         android:layout_height="wrap_content"
         tools:text="R$ 2.078,78"
         android:textColor="@color/neutral_dark_medium"
-        android:textSize="12sp"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBaseline_toBaselineOf="@+id/lblTotal"/>
 
@@ -123,7 +123,7 @@
             android:background="@drawable/bg_button_outline"
             android:text="Editar"
             android:textAllCaps="false"
-            android:textSize="12sp"
+            android:textSize="16sp"
             android:textColor="@color/highlight_darkest"
             android:textStyle="bold"/>
 
@@ -136,7 +136,7 @@
             android:background="@drawable/bg_button_primary"
             android:text="Retirar"
             android:textAllCaps="false"
-            android:textSize="12sp"
+            android:textSize="16sp"
             android:textColor="@android:color/white"
             android:textStyle="bold"/>
 

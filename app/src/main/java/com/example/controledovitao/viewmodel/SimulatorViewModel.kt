@@ -5,6 +5,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.controledovitao.data.model.Invest
+import com.example.controledovitao.data.repository.InvestmentsRepository
 import com.example.controledovitao.data.model.SimulationOption
 import com.example.controledovitao.data.model.SimulationType
 import com.example.controledovitao.data.repository.SimulationRepository
@@ -15,6 +17,7 @@ import kotlin.math.pow
 class SimulatorViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = SimulationRepository(application)
+    private val investRepo = InvestmentsRepository
 
     private val _currentType = MutableLiveData(SimulationType.BANCO)
     val currentType: LiveData<SimulationType> = _currentType
@@ -40,6 +43,10 @@ class SimulatorViewModel(application: Application) : AndroidViewModel(applicatio
 
     private val _infoRate = MutableLiveData<String>()
     val infoRate: LiveData<String> = _infoRate
+
+    // --- ALTERAÇÃO AQUI: LiveData para observar o status de salvamento ---
+    private val _saveStatus = MutableLiveData<Boolean>()
+    val saveStatus: LiveData<Boolean> = _saveStatus
 
     init {
         loadOptions(SimulationType.BANCO)
@@ -127,5 +134,31 @@ class SimulatorViewModel(application: Application) : AndroidViewModel(applicatio
 
         _resultTotal.value = finalAmount
         _resultYield.value = finalAmount.subtract(principal)
+    }
+
+    fun saveInvestment() {
+        val option = _selectedOption.value ?: return
+        val amount = inputValue.value ?: BigDecimal.ZERO
+        val totalEstimate = _resultTotal.value ?: BigDecimal.ZERO
+        val years = inputYears.value ?: 0
+        val months = inputMonths.value ?: 0
+
+        if (amount <= BigDecimal.ZERO) {
+            _saveStatus.value = false
+            return
+        }
+        val periodString = "P${years}Y${months}M"
+        val newInvestment = Invest(
+            id = "",
+            name = option.name,
+            value = amount.toDouble(),
+            spentDate = System.currentTimeMillis(),
+            period = periodString,
+            estimate = totalEstimate.toDouble()
+        )
+
+        investRepo.saveInvestment(newInvestment) { success ->
+            _saveStatus.value = success
+        }
     }
 }

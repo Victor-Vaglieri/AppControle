@@ -53,6 +53,7 @@ class ReportsActivity : AppCompatActivity() {
     private fun setupExportButtons() {
         binding.btnExportExcel.setOnClickListener {
             Toast.makeText(this, "Gerando arquivo Excel...", Toast.LENGTH_SHORT).show()
+            // TODO fazer o gerador
         }
 
         binding.btnExportPDF.setOnClickListener {

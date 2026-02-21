@@ -1,5 +1,6 @@
 package com.example.controledovitao.ui
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -29,8 +30,25 @@ class InvestmentsActivity : AppCompatActivity() {
     private fun setupList() {
         binding.recyclerInvestments.layoutManager = LinearLayoutManager(this)
 
-        val adapter = InvestmentsAdapter()
+        val adapter = InvestmentsAdapter(
+            onEditClick = { invest ->
+                val intent = Intent(this, InvestmentEditActivity::class.java)
+                intent.putExtra("INVEST_ID", invest.id)
+                intent.putExtra("INVEST_NAME", invest.name)
+                intent.putExtra("INVEST_VALUE", invest.value)
+                intent.putExtra("INVEST_PERIOD", invest.period)
+                startActivity(intent)
+            },
+            onWithdrawClick = { invest ->
+                val intent = Intent(this, InvestmentWithdrawActivity::class.java)
+                intent.putExtra("INVEST_ID", invest.id)
+                intent.putExtra("INVEST_NAME", invest.name)
+                intent.putExtra("INVEST_VALUE", invest.value)
+                startActivity(intent)
+            }
+        )
         binding.recyclerInvestments.adapter = adapter
+
         viewModel.investmentsList.observe(this) { lista ->
             adapter.updateList(lista)
         }
@@ -41,5 +59,4 @@ class InvestmentsActivity : AppCompatActivity() {
             finish()
         }
     }
-
 }

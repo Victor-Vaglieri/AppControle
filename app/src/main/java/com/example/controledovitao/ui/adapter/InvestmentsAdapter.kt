@@ -2,7 +2,6 @@ package com.example.controledovitao.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.controledovitao.data.model.Invest
 import com.example.controledovitao.databinding.ItemInvestmentBinding
@@ -10,7 +9,10 @@ import java.text.NumberFormat
 import java.time.Period
 import java.util.Locale
 
-class InvestmentsAdapter : RecyclerView.Adapter<InvestmentsAdapter.InvestmentViewHolder>() {
+class InvestmentsAdapter(
+    private val onEditClick: (Invest) -> Unit,
+    private val onWithdrawClick: (Invest) -> Unit
+) : RecyclerView.Adapter<InvestmentsAdapter.InvestmentViewHolder>() {
 
     private var items: List<Invest> = emptyList()
 
@@ -48,11 +50,11 @@ class InvestmentsAdapter : RecyclerView.Adapter<InvestmentsAdapter.InvestmentVie
             binding.tvYield.text = "+${formatter.format(rendimento)}"
 
             binding.btnEdit.setOnClickListener {
-                Toast.makeText(binding.root.context, "Editar ${item.name}", Toast.LENGTH_SHORT).show()
+                onEditClick(item)
             }
 
             binding.btnWithdraw.setOnClickListener {
-                Toast.makeText(binding.root.context, "Retirar ${item.name}", Toast.LENGTH_SHORT).show()
+                onWithdrawClick(item)
             }
         }
     }

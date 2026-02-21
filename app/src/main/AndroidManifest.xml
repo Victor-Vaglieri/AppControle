@@ -67,6 +67,14 @@
             android:name=".ui.PaymentsActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.InvestmentEditActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.InvestmentWithdrawActivity"
+            android:exported="false" />
+
 
 
     </application>

@@ -8,6 +8,7 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -182,6 +183,15 @@ class SimulatorInvestActivity : AppCompatActivity() {
         viewModel.resultTotal.observe(this) {
             binding.resTotal.text = currencyFormat.format(it)
         }
+
+        viewModel.saveStatus.observe(this) { success ->
+            if (success) {
+                startActivity(Intent(this, InvestmentsActivity::class.java))
+                finish()
+            } else {
+                Toast.makeText(this, "Erro ao lançar investimento. Verifique os dados.", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun setupNavigation() {
@@ -191,7 +201,7 @@ class SimulatorInvestActivity : AppCompatActivity() {
         }
 
         binding.btnLaunch.setOnClickListener {
-            // TODO: Logica para salvar investimento real
+            viewModel.saveInvestment()
         }
     }
 }

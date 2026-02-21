@@ -33,7 +33,25 @@ object InvestmentsRepository {
             .addOnFailureListener { onResult(false) }
     }
 
-    fun deleteInvestment(id: String) {
+    fun updateInvestment(invest: Invest, onResult: (Boolean) -> Unit) {
+        if (invest.id.isEmpty()) {
+            onResult(false)
+            return
+        }
+
+        collection.document(invest.id).set(invest)
+            .addOnSuccessListener { onResult(true) }
+            .addOnFailureListener { onResult(false) }
+    }
+
+    fun deleteInvestment(id: String, onResult: ((Boolean) -> Unit)? = null) {
+        if (id.isEmpty()) {
+            onResult?.invoke(false)
+            return
+        }
+
         collection.document(id).delete()
+            .addOnSuccessListener { onResult?.invoke(true) }
+            .addOnFailureListener { onResult?.invoke(false) }
     }
 }
