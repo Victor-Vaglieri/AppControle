@@ -12,6 +12,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.flow.first
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
@@ -40,6 +41,10 @@ class ConfigRepository(private val context: Context) {
         }
     }
 
+    suspend fun getBiometricEnabled(): Boolean {
+        val preferences = context.dataStore.data.first()
+        return preferences[BIOMETRIC_KEY] ?: false
+    }
     fun getProfileImage(): Uri? {
         return auth.currentUser?.photoUrl
     }

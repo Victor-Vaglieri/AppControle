@@ -9,11 +9,14 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.controledovitao.databinding.LoginBinding
 import com.example.controledovitao.viewmodel.LoginViewModel
 import com.example.controledovitao.data.repository.AuthRepository
-
+import androidx.lifecycle.lifecycleScope
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.asLiveData
 import com.example.controledovitao.BuildConfig
+import com.example.controledovitao.data.repository.ConfigRepository
+import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: LoginBinding
@@ -32,31 +35,18 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
-        //criarContaProvisoria()
 
-        tentarLoginBiometrico()
+        lifecycleScope.launch {
+            val isBiometricEnabled = ConfigRepository(application).getBiometricEnabled()
+            if (isBiometricEnabled) {
+                tentarLoginBiometrico()
+            }
+        }
 
         setupObservers()
         setupListeners()
     }
 
-    private fun criarContaProvisoria() {
-        val emailParaCriar = BuildConfig.USER_EMAIL
-        val senhaParaCriar = BuildConfig.USER_PASSWORD
-        val nomeParaCriar = BuildConfig.USER_NAME
-
-        Toast.makeText(this, "Tentando criar usuário...", Toast.LENGTH_LONG).show()
-
-        AuthRepository.createUserOnce(emailParaCriar, senhaParaCriar, nomeParaCriar) { sucesso, msg ->
-            if (sucesso) {
-                Toast.makeText(this, "SUCESSO: $msg", Toast.LENGTH_LONG).show()
-                Log.d("LOGIN_SETUP", "Conta criada com sucesso!")
-            } else {
-                Toast.makeText(this, "ERRO: $msg", Toast.LENGTH_LONG).show()
-                Log.e("LOGIN_SETUP", "Falha ao criar: $msg")
-            }
-        }
-    }
 
     private fun setupListeners() {
         binding.btnLogin.setOnClickListener {
