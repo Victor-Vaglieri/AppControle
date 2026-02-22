@@ -6,12 +6,23 @@ import androidx.lifecycle.ViewModel
 import com.example.controledovitao.data.repository.ReportsRepository
 import com.example.controledovitao.ui.adapter.ChartData
 
+data class ReportItem(
+    val date: String,
+    val category: String,
+    val description: String,
+    val value: Double
+)
+
 class ReportsViewModel : ViewModel() {
 
     private val repository = ReportsRepository()
 
     private val _charts = MutableLiveData<List<ChartData>>()
     val charts: LiveData<List<ChartData>> = _charts
+
+    // Lista de dados para exportação
+    private val _exportData = MutableLiveData<List<ReportItem>>()
+    val exportData: LiveData<List<ReportItem>> = _exportData
 
     private val _limitAlert = MutableLiveData(80)
     val limitAlert: LiveData<Int> = _limitAlert
@@ -24,9 +35,14 @@ class ReportsViewModel : ViewModel() {
     }
 
     private fun startListening() {
+        // Escuta os dados do gráfico
         repository.listenToChartsData { chartDataList ->
             _charts.value = chartDataList
+        }
 
+        // --- ALTERAÇÃO AQUI: Escuta os dados reais do Excel/PDF em tempo real ---
+        repository.listenToExportData { exportList ->
+            _exportData.value = exportList
         }
     }
 
