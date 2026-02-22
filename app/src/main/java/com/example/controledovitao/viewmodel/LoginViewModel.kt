@@ -7,7 +7,7 @@ import com.example.controledovitao.data.repository.AuthRepository
 
 class LoginViewModel : ViewModel() {
 
-    private val repository = AuthRepository()
+    private val repository = AuthRepository
 
     private val _loginSuccess = MutableLiveData<Boolean>()
     val loginSuccess: LiveData<Boolean> = _loginSuccess

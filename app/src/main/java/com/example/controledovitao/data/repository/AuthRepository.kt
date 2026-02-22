@@ -6,24 +6,48 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 
-class AuthRepository {
+object AuthRepository {
 
     private val auth: FirebaseAuth = Firebase.auth
     private val db = Firebase.firestore
     private val usersCollection = db.collection("users")
 
-    fun login(email: String, pass: String, onResult: (Boolean, String?) -> Unit) {
-        if (email.isBlank() || pass.isBlank()) {
-            onResult(false, "Preencha e-mail e senha")
+    fun login(loginInput: String, pass: String, onResult: (Boolean, String?) -> Unit) {
+        if (loginInput.isBlank() || pass.isBlank()) {
+            onResult(false, "Preencha login e senha")
             return
         }
 
+        if (loginInput.contains("@")) {
+            authenticateWithEmail(loginInput, pass, onResult)
+        } else {
+            usersCollection.whereEqualTo("name", loginInput).get()
+                .addOnSuccessListener { documents ->
+                    if (documents.isEmpty) {
+                        onResult(false, "Usuário não encontrado")
+                    } else {
+                        // Pega o e-mail do primeiro usuário encontrado com esse nome
+                        val email = documents.documents[0].getString("email")
+                        if (email != null) {
+                            authenticateWithEmail(email, pass, onResult)
+                        } else {
+                            onResult(false, "E-mail inválido no banco de dados")
+                        }
+                    }
+                }
+                .addOnFailureListener {
+                    onResult(false, "Erro ao buscar usuário no banco")
+                }
+        }
+    }
+
+    private fun authenticateWithEmail(email: String, pass: String, onResult: (Boolean, String?) -> Unit) {
         auth.signInWithEmailAndPassword(email, pass)
             .addOnSuccessListener {
                 onResult(true, null)
             }
             .addOnFailureListener { e ->
-                onResult(false, e.message ?: "Erro no login")
+                onResult(false, "Login ou senha incorretos")
             }
     }
 
@@ -52,6 +76,22 @@ class AuthRepository {
 
     fun logout() {
         auth.signOut()
+    }
+
+    fun updateUserName(newName: String, onResult: (Boolean) -> Unit) {
+        val currentUser = auth.currentUser
+        if (currentUser == null) {
+            onResult(false)
+            return
+        }
+        usersCollection.document(currentUser.uid)
+            .update("name", newName)
+            .addOnSuccessListener {
+                onResult(true)
+            }
+            .addOnFailureListener {
+                onResult(false)
+            }
     }
 
     fun isLogged(): Boolean {

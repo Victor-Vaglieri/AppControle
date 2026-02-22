@@ -1,9 +1,16 @@
+import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
 
     id("kotlin-parcelize")
     id("com.google.gms.google-services")
+}
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(localPropertiesFile.inputStream())
 }
 
 android {
@@ -20,6 +27,10 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "USER_EMAIL", localProperties.getProperty("USER_EMAIL") ?: "\"\"")
+        buildConfigField("String", "USER_PASSWORD", localProperties.getProperty("USER_PASSWORD") ?: "\"\"")
+        buildConfigField("String", "USER_NAME", localProperties.getProperty("USER_NAME") ?: "\"\"")
     }
 
     buildTypes {
@@ -42,6 +53,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 

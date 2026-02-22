@@ -4,6 +4,7 @@ import android.app.Application
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.firestoreSettings
+import com.example.controledovitao.data.repository.AuthRepository
 class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
@@ -12,5 +13,6 @@ class MyApplication : Application() {
             isPersistenceEnabled = true
         }
         db.firestoreSettings = settings
+        AuthRepository.logout()
     }
 }

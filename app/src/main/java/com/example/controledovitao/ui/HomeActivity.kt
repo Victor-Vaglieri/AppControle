@@ -309,7 +309,6 @@ class HomeActivity : AppCompatActivity() {
         inner class ViewHolder(val view: ExpenseItemView) : RecyclerView.ViewHolder(view)
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-            // Reutiliza o componente ExpenseItemView via código (sem precisar de XML extra)
             val view = ExpenseItemView(parent.context)
             view.layoutParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,

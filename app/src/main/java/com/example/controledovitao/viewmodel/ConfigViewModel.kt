@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.controledovitao.data.repository.AuthRepository
 import com.example.controledovitao.data.repository.ConfigRepository
 import kotlinx.coroutines.launch
 
@@ -32,6 +33,14 @@ class ConfigViewModel(application: Application) : AndroidViewModel(application) 
         _userPhoto.value = repository.getProfileImage()
         viewModelScope.launch {
             _userName.value = repository.getUserName()
+        }
+    }
+
+    fun updateUserName(newName: String) {
+        AuthRepository.updateUserName(newName) { success ->
+            if (success) {
+                _userName.value = newName
+            }
         }
     }
 

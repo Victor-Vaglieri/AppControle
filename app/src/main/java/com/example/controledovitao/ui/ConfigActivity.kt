@@ -99,18 +99,15 @@ class ConfigActivity : AppCompatActivity() {
     private fun abrirDialogEditarNome() {
         val input = EditText(this)
         input.hint = "Novo nome"
-
         input.setText(binding.tvUserName.text)
 
         AlertDialog.Builder(this)
             .setTitle("Editar Nome")
             .setView(input)
             .setPositiveButton("Salvar") { _, _ ->
-                val novoNome = input.text.toString()
+                val novoNome = input.text.toString().trim()
                 if (novoNome.isNotEmpty()) {
-                    // TODO: Chamar viewModel.updateName(novoNome) se você criar essa função
-                    Toast.makeText(this, "Nome salvo localmente (implementar no VM)", Toast.LENGTH_SHORT).show()
-                    binding.tvUserName.text = novoNome
+                    viewModel.updateUserName(novoNome)
                 }
             }
             .setNegativeButton("Cancelar", null)
