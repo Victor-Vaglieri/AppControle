@@ -75,6 +75,10 @@
             android:name=".ui.InvestmentWithdrawActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.BillActivity"
+            android:exported="false" />
+
 
 
     </application>

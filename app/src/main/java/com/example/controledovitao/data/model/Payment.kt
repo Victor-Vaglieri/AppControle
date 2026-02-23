@@ -9,6 +9,8 @@ import java.util.Date
 import java.util.Locale
 import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.Exclude
+
+@Parcelize
 data class Payment(
     @DocumentId
     val id: String = "",
@@ -21,20 +23,24 @@ data class Payment(
     val shutdown: Int? = null,
 
     var spent: MutableList<Spent> = mutableListOf()
-) {
+) : Parcelable {
     @get:Exclude
+    @IgnoredOnParcel
     val option: Options
         get() = Options.getByOp(optionType)
 
     @get:Exclude
+    @IgnoredOnParcel
     val balanceAsBigDecimal: BigDecimal
         get() = BigDecimal.valueOf(balance)
 
     @get:Exclude
+    @IgnoredOnParcel
     val limitAsBigDecimal: BigDecimal?
         get() = limit?.let { BigDecimal.valueOf(it) }
 
     @get:Exclude
+    @IgnoredOnParcel
     val usageAsBigDecimal: BigDecimal?
         get() = usage?.let { BigDecimal.valueOf(it) }
 }

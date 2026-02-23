@@ -6,7 +6,6 @@ import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
 
-// MUDANÇA 1: Use 'object' para ser Singleton (uma instância só no app todo)
 object PaymentRepository {
 
     private val db = Firebase.firestore
@@ -47,5 +46,17 @@ object PaymentRepository {
 
     fun deleteMethod(id: String) {
         collection.document(id).delete()
+    }
+
+    fun closeInvoice(paymentId: String, onResult: (Boolean) -> Unit) {
+        if (paymentId.isEmpty()) {
+            onResult(false)
+            return
+        }
+
+        collection.document(paymentId)
+            .update("spent", emptyList<Any>())
+            .addOnSuccessListener { onResult(true) }
+            .addOnFailureListener { onResult(false) }
     }
 }

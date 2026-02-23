@@ -17,6 +17,7 @@ import com.example.controledovitao.data.model.Spent
 import com.example.controledovitao.databinding.HomeBinding
 import com.example.controledovitao.ui.components.ExpenseItemView
 import com.example.controledovitao.viewmodel.HomeViewModel
+import com.example.controledovitao.ui.BillActivity
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.NumberFormat
@@ -245,7 +246,12 @@ class HomeActivity : AppCompatActivity() {
         binding.btnBalanceMinus.setOnClickListener { viewModel.updateSelectedCardBalance(-10.0) }
 
         binding.btnCloseInvoice.setOnClickListener {
-            viewModel.closeInvoice()
+            val currentPayment = viewModel.selectedPaymentMethod.value
+            if (currentPayment != null) {
+                val intent = Intent(this, BillActivity::class.java)
+                intent.putExtra("EXTRA_PAYMENT", currentPayment)
+                startActivity(intent)
+            }
         }
     }
 
