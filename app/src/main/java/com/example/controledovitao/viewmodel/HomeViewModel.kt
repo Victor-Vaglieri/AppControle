@@ -99,10 +99,23 @@ class HomeViewModel : ViewModel() {
 
     fun filterSpents(methodName: String) {
         if (methodName.equals("TODOS", ignoreCase = true)) {
-            _recentSpents.value = allSpentsCache.take(10)
+            if (allSpentsCache.isEmpty()) {
+                val emptySpent = Spent(name = "Nenhum gasto registrado", value = 0.0, times = 1)
+                val emptyTriple = Triple("TODOS", Pair(BigDecimal.ZERO, 1), emptySpent)
+                _recentSpents.value = listOf(emptyTriple)
+            } else {
+                _recentSpents.value = allSpentsCache.take(10)
+            }
         } else {
             val filtered = allSpentsCache.filter { it.first.equals(methodName, ignoreCase = true) }
-            _recentSpents.value = filtered
+
+            if (filtered.isEmpty()) {
+                val emptySpent = Spent(name = "Nenhum gasto neste método", value = 0.0, times = 1)
+                val emptyTriple = Triple(methodName, Pair(BigDecimal.ZERO, 1), emptySpent)
+                _recentSpents.value = listOf(emptyTriple)
+            } else {
+                _recentSpents.value = filtered
+            }
         }
     }
 

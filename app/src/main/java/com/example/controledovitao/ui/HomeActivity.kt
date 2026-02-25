@@ -177,8 +177,29 @@ class HomeActivity : AppCompatActivity() {
 
     private fun updateCardDetailsUI(payment: Payment) {
         val localeBR = Locale("pt", "BR")
-        binding.tvCardLimit.text = String.format(localeBR, "%.2f", payment.limit ?: 0.0)
         binding.tvCardBalance.text = String.format(localeBR, "%.2f", payment.balance)
+        when (payment.option) {
+            com.example.controledovitao.data.model.Options.MONEY -> {
+                binding.containerLimitControl.visibility = View.GONE
+                binding.btnCloseInvoice.visibility = View.GONE
+                binding.tvTituloGastos.text = "Gastos em Dinheiro"
+            }
+
+            com.example.controledovitao.data.model.Options.DEBIT -> {
+                binding.containerLimitControl.visibility = View.GONE
+                binding.btnCloseInvoice.visibility = View.GONE
+                binding.tvTituloGastos.text = "Gastos nesta Conta"
+            }
+
+            com.example.controledovitao.data.model.Options.CREDIT -> {
+                binding.containerLimitControl.visibility = View.VISIBLE
+                binding.btnCloseInvoice.visibility = View.VISIBLE
+
+                binding.tvCardLimit.text = String.format(localeBR, "%.2f", payment.limit ?: 0.0)
+
+                binding.tvTituloGastos.text = "Gastos neste Cartão"
+            }
+        }
     }
 
     private fun setupChips(methodNames: List<String>) {
