@@ -177,7 +177,9 @@ class HomeActivity : AppCompatActivity() {
 
     private fun updateCardDetailsUI(payment: Payment) {
         val localeBR = Locale("pt", "BR")
+
         binding.tvCardBalance.text = String.format(localeBR, "%.2f", payment.balance)
+
         when (payment.option) {
             com.example.controledovitao.data.model.Options.MONEY -> {
                 binding.containerLimitControl.visibility = View.GONE
@@ -196,8 +198,27 @@ class HomeActivity : AppCompatActivity() {
                 binding.btnCloseInvoice.visibility = View.VISIBLE
 
                 binding.tvCardLimit.text = String.format(localeBR, "%.2f", payment.limit ?: 0.0)
-
                 binding.tvTituloGastos.text = "Gastos neste Cartão"
+
+                val today = java.util.Calendar.getInstance().get(java.util.Calendar.DAY_OF_MONTH)
+
+                val closeDay = payment.bestDate ?: 1
+                val dueDay = payment.shutdown ?: 1
+                val canClose = if (closeDay < dueDay) {
+                    today >= closeDay && today < dueDay
+                } else {
+                    today >= closeDay || today < dueDay
+                }
+
+                if (canClose) {
+                    binding.btnCloseInvoice.isEnabled = true
+                    binding.btnCloseInvoice.alpha = 1.0f
+                    binding.btnCloseInvoice.text = "Fechar Fatura Atual"
+                } else {
+                    binding.btnCloseInvoice.isEnabled = false
+                    binding.btnCloseInvoice.alpha = 0.4f
+                    binding.btnCloseInvoice.text = "Aguardando Fechamento"
+                }
             }
         }
     }
