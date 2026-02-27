@@ -134,7 +134,7 @@
                     android:textColor="@color/neutral_dark_darkest"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:checked="true"
+                    android:checked="false"
                     app:thumbTint="@null"
                     app:trackTint="@null"
                     android:thumb="@drawable/switch_thumb_selector"

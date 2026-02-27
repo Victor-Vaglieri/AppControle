@@ -61,7 +61,14 @@ class ConfigActivity : AppCompatActivity() {
         }
     }
 
+    private fun desableDataCollection(){
+        binding.switchColeta.isChecked = false
+        binding.switchColeta.isEnabled = false
+
+    }
+
     private fun setupListeners() {
+        desableDataCollection()
         binding.switchTheme.setOnCheckedChangeListener { _, isChecked ->
             if (isProgrammaticChange) return@setOnCheckedChangeListener
             viewModel.toggleTheme(isChecked)
@@ -71,6 +78,7 @@ class ConfigActivity : AppCompatActivity() {
             if (isProgrammaticChange) return@setOnCheckedChangeListener
             viewModel.toggleBiometric(isChecked)
         }
+
 
         binding.switchColeta.setOnCheckedChangeListener { _, isChecked ->
             if (isProgrammaticChange) return@setOnCheckedChangeListener

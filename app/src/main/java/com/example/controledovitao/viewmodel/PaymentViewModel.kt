@@ -75,6 +75,9 @@ class PaymentViewModel : ViewModel() {
 
         repository.updateMethod(updatedPayment) { success ->
             _operationStatus.value = success
+            if (success) {
+                repository.syncBalanceForSameBank(name, balance)
+            }
         }
     }
 }

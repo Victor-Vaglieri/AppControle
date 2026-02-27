@@ -44,6 +44,27 @@ object PaymentRepository {
             .addOnFailureListener { onResult(false) }
     }
 
+
+    fun syncBalanceForSameBank(paymentName: String, newBalance: Double) {
+        val bankPrefix = paymentName.lowercase().split(" ").firstOrNull() ?: return
+
+        collection.get().addOnSuccessListener { snapshot ->
+            val batch = db.batch()
+
+            for (doc in snapshot.documents) {
+                val currentName = doc.getString("name") ?: ""
+
+                if (currentName.startsWith(bankPrefix, ignoreCase = true)) {
+                    batch.update(doc.reference, "balance", newBalance)
+                }
+            }
+
+            batch.commit()
+                .addOnSuccessListener { Log.d("Sync", "Saldos sincronizados com sucesso!") }
+                .addOnFailureListener { Log.e("Sync", "Erro ao sincronizar saldos", it) }
+        }
+    }
+
     fun deleteMethod(id: String) {
         collection.document(id).delete()
     }
@@ -53,10 +74,50 @@ object PaymentRepository {
             onResult(false)
             return
         }
+        val docRef = collection.document(paymentId)
+        docRef.get().addOnSuccessListener { snapshot ->
+            val payment = snapshot.toObject<Payment>()
 
-        collection.document(paymentId)
-            .update("spent", emptyList<Any>())
-            .addOnSuccessListener { onResult(true) }
-            .addOnFailureListener { onResult(false) }
+            if (payment != null) {
+                var valorFaturaAtual = 0.0
+                val remainingSpents = payment.spent.mapNotNull { spent ->
+                    val valorParcela = spent.value / spent.times
+                    valorFaturaAtual += valorParcela
+
+                    if (spent.times > 1) {
+                        spent.copy(
+                            times = spent.times - 1,
+                            value = spent.value - valorParcela
+                        )
+                    } else {
+                        null
+                    }
+                }
+
+                val currentUsage = payment.usage ?: 0.0
+                val newUsage = (currentUsage - valorFaturaAtual).coerceAtLeast(0.0)
+
+                val newBalance = payment.balance - valorFaturaAtual
+
+                docRef.update(
+                    mapOf(
+                        "spent" to remainingSpents,
+                        "usage" to newUsage,
+                        "balance" to newBalance
+                    )
+                ).addOnSuccessListener {
+                    syncBalanceForSameBank(payment.name, newBalance)
+
+                    onResult(true)
+                }.addOnFailureListener {
+                    onResult(false)
+                }
+
+            } else {
+                onResult(false)
+            }
+        }.addOnFailureListener {
+            onResult(false)
+        }
     }
 }

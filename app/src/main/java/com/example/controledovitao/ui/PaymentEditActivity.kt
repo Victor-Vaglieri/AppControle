@@ -19,7 +19,7 @@ class PaymentEditActivity : AppCompatActivity() {
 
     private var originalName: String? = null
     private var limitValue = 0.0
-    private var balanceValue = 0.0 // --- NOVO: Variável para o saldo
+    private var balanceValue = 0.0
     private var closeDate = 1
     private var dueDate = 1
 
@@ -31,22 +31,27 @@ class PaymentEditActivity : AppCompatActivity() {
 
         TopBarHelper.setupTopBar(this, binding.topBar)
 
-        // Resgatando todos os dados que vieram da tela de Lista
         originalName = intent.getStringExtra("METHOD_NAME")
         val originalType = intent.getStringExtra("METHOD_TYPE") ?: "credit"
         limitValue = intent.getDoubleExtra("METHOD_LIMIT", 0.0)
-        balanceValue = intent.getDoubleExtra("METHOD_BALANCE", 0.0) // --- NOVO: Lendo saldo da intent
+        balanceValue = intent.getDoubleExtra("METHOD_BALANCE", 0.0)
         closeDate = intent.getIntExtra("METHOD_CLOSE", 1)
         dueDate = intent.getIntExtra("METHOD_DUE", 1)
 
-        // Preenchendo a tela instantaneamente
         binding.etMethodName.setText(originalName)
         val isCredit = originalType.equals("credit", ignoreCase = true)
-        binding.tvTypeReadOnly.text = if (isCredit) "Crédito" else "Débito"
+        val isDebit = originalType.equals("debit", ignoreCase = true)
+        binding.tvTypeReadOnly.text = when {
+            isCredit -> "Crédito"
+            isDebit -> "Débito"
+            else -> "Dinheiro"
+        }
+
+        updateFieldsVisibility(isCredit)
 
         setupObservers()
         setupControls()
-        updateUI() // Atualiza os números na tela, incluindo o novo saldo
+        updateUI()
     }
 
     private fun setupObservers() {
@@ -61,7 +66,6 @@ class PaymentEditActivity : AppCompatActivity() {
     }
 
     private fun setupControls() {
-        // --- CONTROLES DE LIMITE ---
         binding.btnLimitMinus.setOnClickListener {
             limitValue = (limitValue - 50).coerceAtLeast(0.0)
             updateUI()
@@ -70,8 +74,6 @@ class PaymentEditActivity : AppCompatActivity() {
             limitValue += 50
             updateUI()
         }
-
-        // --- CONTROLES DE SALDO (NOVO) ---
         binding.btnBalanceMinus.setOnClickListener {
             balanceValue -= 10
             updateUI()
@@ -81,7 +83,6 @@ class PaymentEditActivity : AppCompatActivity() {
             updateUI()
         }
 
-        // Capturar valor digitado manualmente no Saldo
         binding.tvBalanceValue.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE || event?.keyCode == KeyEvent.KEYCODE_ENTER) {
                 val cleanStr = v.text.toString().replace(".", "").replace(",", ".")
@@ -97,7 +98,6 @@ class PaymentEditActivity : AppCompatActivity() {
             }
         }
 
-        // --- CONTROLES DE DATAS ---
         binding.btnCloseDateMinus.setOnClickListener {
             if (closeDate > 1) closeDate--
             updateUI()
@@ -116,11 +116,9 @@ class PaymentEditActivity : AppCompatActivity() {
             updateUI()
         }
 
-        // --- BOTÃO EDITAR ---
         binding.btnEdit.setOnClickListener {
             val newName = binding.etMethodName.text.toString()
 
-            // Garantir que pega o valor digitado caso o usuário não tenha dado Enter
             val currentBalanceStr = binding.tvBalanceValue.text.toString().replace(".", "").replace(",", ".")
             balanceValue = currentBalanceStr.toDoubleOrNull() ?: balanceValue
 
@@ -143,10 +141,34 @@ class PaymentEditActivity : AppCompatActivity() {
         val localeBR = Locale("pt", "BR")
         binding.tvLimitValue.text = String.format(localeBR, "%.2f", limitValue)
 
-        // --- NOVO: Atualizando o texto do Saldo
         binding.tvBalanceValue.setText(String.format(localeBR, "%.2f", balanceValue))
 
         binding.tvCloseDateValue.text = closeDate.toString()
         binding.tvDueDateValue.text = dueDate.toString()
+    }
+    private fun updateFieldsVisibility(isCredit: Boolean) {
+        binding.btnLimitMinus.isEnabled = isCredit
+        binding.btnLimitPlus.isEnabled = isCredit
+        binding.tvLimitValue.isEnabled = isCredit
+
+        binding.btnCloseDateMinus.isEnabled = isCredit
+        binding.btnCloseDatePlus.isEnabled = isCredit
+
+        binding.btnDueDateMinus.isEnabled = isCredit
+        binding.btnDueDatePlus.isEnabled = isCredit
+
+        val alphaValue = if (isCredit) 1.0f else 0.3f
+
+        binding.btnLimitMinus.alpha = alphaValue
+        binding.btnLimitPlus.alpha = alphaValue
+        binding.tvLimitValue.alpha = alphaValue
+
+        binding.btnCloseDateMinus.alpha = alphaValue
+        binding.btnCloseDatePlus.alpha = alphaValue
+        binding.tvCloseDateValue.alpha = alphaValue
+
+        binding.btnDueDateMinus.alpha = alphaValue
+        binding.btnDueDatePlus.alpha = alphaValue
+        binding.tvDueDateValue.alpha = alphaValue
     }
 }

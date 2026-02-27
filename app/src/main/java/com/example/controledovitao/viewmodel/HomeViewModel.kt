@@ -132,7 +132,11 @@ class HomeViewModel : ViewModel() {
         val newBalance = currentCard.balance + delta
 
         val updatedCard = currentCard.copy(balance = newBalance)
-        paymentRepo.updateMethod(updatedCard) { }
+        paymentRepo.updateMethod(updatedCard) { success ->
+            if (success) {
+                paymentRepo.syncBalanceForSameBank(updatedCard.name, newBalance)
+            }
+        }
     }
 
     fun closeInvoice() {
@@ -145,16 +149,22 @@ class HomeViewModel : ViewModel() {
     }
 
     private fun calculatePaymentTotals(payments: List<Payment>) {
-        var saldo = BigDecimal.ZERO
         var limite = BigDecimal.ZERO
         var uso = BigDecimal.ZERO
 
         payments.forEach { pay ->
-            saldo = saldo.add(pay.balanceAsBigDecimal)
             if (pay.option == Options.CREDIT) {
                 pay.limitAsBigDecimal?.let { limite = limite.add(it) }
                 pay.usageAsBigDecimal?.let { uso = uso.add(it) }
             }
+        }
+
+        val metodosUnicosPorBanco = payments.associateBy {
+            it.name.lowercase().split(" ").firstOrNull() ?: it.name
+        }
+        var saldo = BigDecimal.ZERO
+        metodosUnicosPorBanco.values.forEach { pay ->
+            saldo = saldo.add(pay.balanceAsBigDecimal)
         }
         _totalBalance.value = saldo
         _totalLimit.value = limite

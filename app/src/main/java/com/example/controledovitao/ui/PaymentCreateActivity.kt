@@ -38,6 +38,34 @@ class PaymentCreateActivity : AppCompatActivity() {
         setupObservers()
     }
 
+    private fun updateFieldsVisibility(type: String) {
+        val isCredit = type == "Crédito"
+
+        binding.btnLimitMinus.isEnabled = isCredit
+        binding.btnLimitPlus.isEnabled = isCredit
+        binding.tvLimitValue.isEnabled = isCredit
+
+        binding.btnCloseDateMinus.isEnabled = isCredit
+        binding.btnCloseDatePlus.isEnabled = isCredit
+
+        binding.btnDueDateMinus.isEnabled = isCredit
+        binding.btnDueDatePlus.isEnabled = isCredit
+
+        val alphaValue = if (isCredit) 1.0f else 0.3f
+
+        binding.btnLimitMinus.alpha = alphaValue
+        binding.btnLimitPlus.alpha = alphaValue
+        binding.tvLimitValue.alpha = alphaValue
+
+        binding.btnCloseDateMinus.alpha = alphaValue
+        binding.btnCloseDatePlus.alpha = alphaValue
+        binding.tvCloseDateValue.alpha = alphaValue
+
+        binding.btnDueDateMinus.alpha = alphaValue
+        binding.btnDueDatePlus.alpha = alphaValue
+        binding.tvDueDateValue.alpha = alphaValue
+    }
+
     private fun setupObservers() {
         viewModel.operationStatus.observe(this) { success ->
             if (success) {
@@ -91,6 +119,7 @@ class PaymentCreateActivity : AppCompatActivity() {
             }
             binding.spinnerType.text = selectedText
             toggleTypeMenu()
+            updateFieldsVisibility(selectedText)
         }
 
         binding.tvLimitValue.setOnEditorActionListener { v, actionId, event ->
@@ -108,7 +137,6 @@ class PaymentCreateActivity : AppCompatActivity() {
             }
         }
 
-        // --- ALTERAÇÃO: Capturar valor digitado manualmente no Saldo ---
         binding.tvBalanceValue.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE || event?.keyCode == KeyEvent.KEYCODE_ENTER) {
                 val cleanStr = v.text.toString().replace(".", "").replace(",", ".")
