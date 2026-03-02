@@ -178,7 +178,7 @@ class HomeActivity : AppCompatActivity() {
     private fun updateCardDetailsUI(payment: Payment) {
         val localeBR = Locale("pt", "BR")
 
-        binding.tvCardBalance.text = String.format(localeBR, "%.2f", payment.balance)
+        binding.tvCardBalance.setText(String.format(localeBR, "%.2f", payment.balance))
 
         when (payment.option) {
             com.example.controledovitao.data.model.Options.MONEY -> {
@@ -197,7 +197,7 @@ class HomeActivity : AppCompatActivity() {
                 binding.containerLimitControl.visibility = View.VISIBLE
                 binding.btnCloseInvoice.visibility = View.VISIBLE
 
-                binding.tvCardLimit.text = String.format(localeBR, "%.2f", payment.limit ?: 0.0)
+                binding.tvCardLimit.setText(String.format(localeBR, "%.2f", payment.limit ?: 0.0))
                 binding.tvTituloGastos.text = "Gastos neste Cartão"
 
                 val today = java.util.Calendar.getInstance().get(java.util.Calendar.DAY_OF_MONTH)
@@ -286,6 +286,42 @@ class HomeActivity : AppCompatActivity() {
 
         binding.btnBalancePlus.setOnClickListener { viewModel.updateSelectedCardBalance(10.0) }
         binding.btnBalanceMinus.setOnClickListener { viewModel.updateSelectedCardBalance(-10.0) }
+
+        binding.tvCardLimit.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_DONE || event?.keyCode == android.view.KeyEvent.KEYCODE_ENTER) {
+                val cleanStr = v.text.toString().replace(".", "").replace(",", ".")
+                val newValue = cleanStr.toDoubleOrNull()
+
+                if (newValue != null) {
+                    viewModel.setAbsoluteCardLimit(newValue)
+                }
+
+                val imm = getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
+                imm.hideSoftInputFromWindow(v.windowToken, 0)
+                v.clearFocus()
+                true
+            } else {
+                false
+            }
+        }
+
+        binding.tvCardBalance.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_DONE || event?.keyCode == android.view.KeyEvent.KEYCODE_ENTER) {
+                val cleanStr = v.text.toString().replace(".", "").replace(",", ".")
+                val newValue = cleanStr.toDoubleOrNull()
+
+                if (newValue != null) {
+                    viewModel.setAbsoluteCardBalance(newValue)
+                }
+
+                val imm = getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
+                imm.hideSoftInputFromWindow(v.windowToken, 0)
+                v.clearFocus()
+                true
+            } else {
+                false
+            }
+        }
 
         binding.btnCloseInvoice.setOnClickListener {
             val currentPayment = viewModel.selectedPaymentMethod.value

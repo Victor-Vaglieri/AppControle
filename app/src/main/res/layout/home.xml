@@ -374,12 +374,15 @@
                             android:layout_height="32dp"
                             android:src="@drawable/icon_minus"
                             android:padding="8dp"/>
-                        <TextView
+                        <EditText
                             android:id="@+id/tvCardLimit"
                             android:layout_width="80dp"
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="R$ 0,00"
+                            android:background="@null"
+                            android:inputType="numberDecimal"
+                            android:imeOptions="actionDone"
                             android:textStyle="bold"/>
                         <ImageView
                             android:id="@+id/btnLimitPlus"
@@ -405,12 +408,15 @@
                             android:layout_height="32dp"
                             android:src="@drawable/icon_minus"
                             android:padding="8dp"/>
-                        <TextView
+                        <EditText
                             android:id="@+id/tvCardBalance"
                             android:layout_width="80dp"
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="R$ 0,00"
+                            android:background="@null"
+                            android:inputType="numberDecimal"
+                            android:imeOptions="actionDone"
                             android:textStyle="bold"/>
                         <ImageView
                             android:id="@+id/btnBalancePlus"

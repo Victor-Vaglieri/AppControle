@@ -48,18 +48,26 @@ class SpentRepository {
                     updatedSpents.add(newSpent)
                     payment.spent = updatedSpents
 
+                    // --- CORREÇÃO AQUI ---
                     if (payment.option == Options.CREDIT) {
-                        payment.balance = (payment.balance - doubleValue)
+                        // Crédito: Apenas aumenta o limite usado (fatura). NÃO mexe no saldo da conta.
                         val usoAtual = payment.usage ?: 0.0
                         payment.usage = usoAtual + doubleValue
-
                     } else {
+                        // Débito/Dinheiro: Debita o valor direto do saldo em conta.
                         payment.balance = (payment.balance - doubleValue)
                     }
 
                     collection.document(document.id).set(payment)
                         .addOnSuccessListener {
-                            Log.d("SpentRepo", "Gasto salvo e saldo atualizado!")
+                            Log.d("SpentRepo", "Gasto salvo e saldo/fatura atualizado!")
+
+                            // Se foi um gasto no Débito ou Dinheiro, sincroniza o novo saldo
+                            // com a conta de Crédito (ex: MercadoPago Débito avisa o MercadoPago Crédito)
+                            if (payment.option != Options.CREDIT) {
+                                PaymentRepository.syncBalanceForSameBank(payment.name, payment.balance)
+                            }
+
                             onResult(true)
                         }
                         .addOnFailureListener { e ->

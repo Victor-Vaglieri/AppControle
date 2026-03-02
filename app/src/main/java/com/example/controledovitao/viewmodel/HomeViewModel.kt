@@ -193,6 +193,22 @@ class HomeViewModel : ViewModel() {
         _methodNames.value = payments.map { it.name }
     }
 
+    fun setAbsoluteCardLimit(newLimit: Double) {
+        val currentCard = _selectedPaymentMethod.value ?: return
+        val updatedCard = currentCard.copy(limit = newLimit)
+        paymentRepo.updateMethod(updatedCard) { }
+    }
+
+    fun setAbsoluteCardBalance(newBalance: Double) {
+        val currentCard = _selectedPaymentMethod.value ?: return
+        val updatedCard = currentCard.copy(balance = newBalance)
+        paymentRepo.updateMethod(updatedCard) { success ->
+            if (success) {
+                paymentRepo.syncBalanceForSameBank(updatedCard.name, newBalance)
+            }
+        }
+    }
+
     private fun findBestCard(payments: List<Payment>) {
         val today = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
         val creditCards = payments.filter { it.option == Options.CREDIT }
