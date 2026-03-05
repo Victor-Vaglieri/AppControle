@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Verify Cash Track Report</string>
+    <string name="app_name_icon">VCTR</string>
+
 </resources>
