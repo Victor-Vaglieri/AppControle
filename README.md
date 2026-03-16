@@ -15,14 +15,74 @@ O projeto foi concebido com uma abordagem dual, visando atender tanto a requisit
 O roteiro segue as etapas abaixo:
 
 1.  **Prototipagem de Alta Fidelidade:** Definição da experiência do usuário (UX) e interface visual (UI).
-2.  **Desenvolvimento do Front-end:** Implementação das interfaces e componentes visuais.
-3.  **Implementação de Regras de Negócio:** Desenvolvimento da lógica de interações, validação de dados e integração de fluxos.
-4.  **Testes de Usabilidade:** Validação *on-demand* da navegação e experiência do usuário.
-5.  **Refinamento:** Ajustes finais de performance, correção de *bugs* e polimento visual.
+2.  **Desenvolvimento do Front-end:** Implementação das interfaces e componentes visuais nativos (XML/View Binding).
+3.  **Implementação de Regras de Negócio:** Desenvolvimento da lógica de interações, validação de dados, gestão de faturas e sincronização de saldos.
+4.  **Integração com Backend (BaaS):** Conexão com banco de dados NoSQL em tempo real.
+5.  **Refinamento:** Ajustes de performance, segurança (Biometria) e polimento visual.
+
+
+## Tecnologias e Ferramentas (Execução)
+
+O aplicativo foi desenvolvido de forma nativa para o ecossistema Android, utilizando as seguintes tecnologias:
+
+* **Linguagem:** Kotlin
+* **Arquitetura:** MVVM (Model-View-ViewModel)
+* **Interface:** XML com View Binding
+* **Assincronismo:** Kotlin Coroutines & Lifecycle Scope
+* **Backend / Banco de Dados:** Firebase Firestore (NoSQL em tempo real)
+* **Segurança:** AndroidX Biometric (Autenticação por Digital)
+* **Gráficos:** MPAndroidChart
+* **Trafego de Dados:** Parcelable para transição de objetos entre telas
+
+### Principais Funcionalidades Implementadas
+* **Login Biométrico:** Acesso utilizando os sensores biométricos do dispositivo.
+* **Dashboard Dinâmico:** Gráficos e cálculos automáticos de saldo, limite de crédito e uso, com filtros por método de pagamento.
+* **Gestão de Faturas (Smart):** Lógica de fechamento de faturas, abatendo parcelas pagas, recalculando limites e transpondo parcelas futuras para os meses seguintes.
+* **Sincronização de Saldos:** Espelhamento automático de saldo em conta corrente entre cartões de débito e crédito da mesma instituição bancária.
+* **Adaptação de UI em Tempo Real:** A interface se molda ao tipo de pagamento selecionado (ex: ocultando limites de crédito quando um cartão de débito ou dinheiro físico é selecionado).
 
 ## Execução
 
-> COMING SOON
+Para executar este projeto localmente, é necessário ter o ambiente de desenvolvimento Android configurado e adicionar os arquivos de segurança que não são versionados no repositório.
+
+### Pré-requisitos
+* **Android Studio** (versão Hedgehog ou superior recomendada).
+* Aparelho físico ou Emulador Android com suporte a biometria (opcional para testar o login biométrico).
+* SDK do Android (Mínimo API 24, Target API 34+).
+
+### Passo a Passo
+
+1. **Clone o repositório:**
+   ```bash
+   git clone [https://github.com/Victor-Vaglieri/AppControle.git](https://github.com/SEU-USUARIO/NOME-DO-REPOSITORIO.git)
+   ```
+
+2. Abra o projeto:
+
+    Abra o Android Studio, selecione Open e navegue até a pasta clonada.
+
+3. Configuração do Firebase:
+
+    Como o projeto utiliza o Firebase Firestore, você precisará do arquivo de configuração do Google:
+    * Crie um projeto no Firebase Console.
+    * Ative o banco de dados Firestore.
+    * Registre um app Android com o mesmo package name do projeto (com.example.controledovitao).
+    * Baixe o arquivo google-services.json e coloque-o dentro da pasta app/ do projeto.
+
+4. Configuração de Variáveis Locais (Biometria):
+
+    O projeto utiliza credenciais seguras para o bypass do login via biometria. Abra o arquivo local.properties (na raiz do projeto) e adicione as seguintes linhas com as suas credenciais de teste:
+
+```Properties
+USER_EMAIL="seu_email_de_teste@gmail.com"
+USER_PASSWORD="sua_senha_de_teste"
+```
+
+5. Sincronização e Build:
+
+* Aguarde o Gradle sincronizar todas as dependências do projeto.
+* Selecione um emulador ou conecte o seu smartphone.
+* Clique em Run (Shift + F10) ou no ícone de "Play" na barra superior do Android Studio.
 
 ## Prototipagem e Design (UI/UX)
 
@@ -141,4 +201,16 @@ Abaixo apresenta a visualização das principais interfaces e funcionalidades do
 
 ## Estrutura do Projeto
 
-> COMING SOON
+```text
+com.example.controledovitao
+│
+├── data/                  # Camada de Dados
+│   ├── model/             # Data classes e Enums (Payment, Spent, Options) com Parcelize
+│   └── repository/        # Integração com Firebase Firestore e regras de persistência
+├── viewmodel/             # Camada Lógica (ViewModel)
+├── ui/                    # Camada de Apresentação (View)
+│   ├── adapter/           # Adapters para RecyclerViews
+│   ├── components/        # Componentes visuais customizados (ExpenseItemView, etc)
+│   └── ...                # Activities (HomeActivity, BillActivity, etc)
+└── utils/                 # Extensões e formatadores de moeda/data
+```
