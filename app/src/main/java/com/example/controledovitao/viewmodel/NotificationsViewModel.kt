@@ -11,9 +11,7 @@ import com.example.controledovitao.data.model.Status
 import com.example.controledovitao.data.repository.NotificationsRepository
 import kotlinx.coroutines.launch
 
-class NotificationsViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val repository = NotificationsRepository(application)
+class NotificationsViewModel(application: Application, private val repository: NotificationsRepository = NotificationsRepository(application)) : AndroidViewModel(application) {
 
     private val _notifications = MutableLiveData<List<Notification>>()
     val notifications: LiveData<List<Notification>> = _notifications

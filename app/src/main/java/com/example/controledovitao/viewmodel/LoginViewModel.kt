@@ -5,16 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.controledovitao.data.repository.AuthRepository
 
-class LoginViewModel : ViewModel() {
+class LoginViewModel(private val repository: AuthRepository = AuthRepository) : ViewModel() {
 
-    private val repository = AuthRepository
-
-    private val _loginSuccess = MutableLiveData<Boolean>()
+    private val _loginSuccess = MutableLiveData<Boolean>(false)
     val loginSuccess: LiveData<Boolean> = _loginSuccess
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = _errorMessage
 
-    private val _isLoading = MutableLiveData<Boolean>()
+    private val _isLoading = MutableLiveData<Boolean>(false)
     val isLoading: LiveData<Boolean> = _isLoading
 
     fun doLogin(email: String, pass: String) {

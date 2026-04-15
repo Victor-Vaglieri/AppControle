@@ -13,9 +13,7 @@ data class ReportItem(
     val value: Double
 )
 
-class ReportsViewModel : ViewModel() {
-
-    private val repository = ReportsRepository()
+class ReportsViewModel(private val repository: ReportsRepository = ReportsRepository()) : ViewModel() {
 
     private val _charts = MutableLiveData<List<ChartData>>()
     val charts: LiveData<List<ChartData>> = _charts

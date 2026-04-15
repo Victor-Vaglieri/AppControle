@@ -11,9 +11,8 @@ import com.example.controledovitao.data.repository.AuthRepository
 import com.example.controledovitao.data.repository.ConfigRepository
 import kotlinx.coroutines.launch
 
-class ConfigViewModel(application: Application) : AndroidViewModel(application) {
+class ConfigViewModel(application: Application, private val repository: ConfigRepository = ConfigRepository(application)) : AndroidViewModel(application) {
 
-    private val repository = ConfigRepository(application)
     private val _userName = MutableLiveData<String>()
     val userName: LiveData<String> = _userName
 

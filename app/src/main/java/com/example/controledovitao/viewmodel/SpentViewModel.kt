@@ -6,9 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.example.controledovitao.data.repository.SpentRepository
 import java.math.BigDecimal
 
-class SpentViewModel : ViewModel() {
-
-    private val repository = SpentRepository()
+class SpentViewModel(private val repository: SpentRepository = SpentRepository()) : ViewModel() {
 
     private val _saveSuccess = MutableLiveData<Boolean>()
     val saveSuccess: LiveData<Boolean> = _saveSuccess
