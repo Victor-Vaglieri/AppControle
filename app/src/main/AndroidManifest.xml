@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.controledovitao"
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
-        android:name=".MyApplication"
+        android:name="com.example.controledovitao.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -12,7 +13,7 @@
         android:theme="@style/Theme.ControleDoVitao">
 
         <activity
-            android:name=".ui.LoginActivity"
+            android:name="com.example.controledovitao.ui.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,63 +22,63 @@
         </activity>
 
         <activity
-            android:name=".ui.HomeActivity"
+            android:name="com.example.controledovitao.ui.HomeActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.SpentCreateActivity"
+            android:name="com.example.controledovitao.ui.SpentCreateActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.ConfigActivity"
+            android:name="com.example.controledovitao.ui.ConfigActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.NotificationsActivity"
+            android:name="com.example.controledovitao.ui.NotificationsActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.ReportsActivity"
+            android:name="com.example.controledovitao.ui.ReportsActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.SpentViewActivity"
+            android:name="com.example.controledovitao.ui.SpentViewActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.InvestmentsActivity"
+            android:name="com.example.controledovitao.ui.InvestmentsActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.SimulatorInvestActivity"
+            android:name="com.example.controledovitao.ui.SimulatorInvestActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.PaymentCreateActivity"
+            android:name="com.example.controledovitao.ui.PaymentCreateActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.PaymentEditActivity"
+            android:name="com.example.controledovitao.ui.PaymentEditActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.PaymentListActivity"
+            android:name="com.example.controledovitao.ui.PaymentListActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.PaymentsActivity"
+            android:name="com.example.controledovitao.ui.PaymentsActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.InvestmentEditActivity"
+            android:name="com.example.controledovitao.ui.InvestmentEditActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.InvestmentWithdrawActivity"
+            android:name="com.example.controledovitao.ui.InvestmentWithdrawActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.BillActivity"
+            android:name="com.example.controledovitao.ui.BillActivity"
             android:exported="false" />
 
 
