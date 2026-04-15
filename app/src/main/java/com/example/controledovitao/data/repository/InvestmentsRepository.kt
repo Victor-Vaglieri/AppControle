@@ -8,8 +8,8 @@ import com.google.firebase.firestore.toObject
 
 object InvestmentsRepository {
 
-    private val db = Firebase.firestore
-    private val collection = db.collection("investments")
+    private val db get() = Firebase.firestore
+    private val collection get() = db.collection("investments")
 
     fun listenToInvestments(onUpdate: (List<Invest>) -> Unit) {
         collection.addSnapshotListener { snapshot, error ->

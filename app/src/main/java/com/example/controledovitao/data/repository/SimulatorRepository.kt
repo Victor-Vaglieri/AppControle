@@ -2,6 +2,8 @@ package com.example.controledovitao.data.repository
 
 import android.content.Context
 import android.util.Log
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -14,9 +16,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
-private val Context.dataStoreCache by preferencesDataStore(name = "simulation_cache")
+private val Context.simulationDataStore by preferencesDataStore(name = "simulation_cache")
 
-class SimulationRepository(private val context: Context) {
+class SimulationRepository(
+    private val context: Context,
+    private val dataStore: DataStore<Preferences> = context.simulationDataStore
+) {
 
     private val gson = Gson()
 
@@ -58,14 +63,14 @@ class SimulationRepository(private val context: Context) {
         val key = if (type == SimulationType.BANCO) KEY_CACHE_BANCO else KEY_CACHE_CRIPTO
         val jsonString = gson.toJson(list)
 
-        context.dataStoreCache.edit { prefs ->
+        dataStore.edit { prefs ->
             prefs[key] = jsonString
         }
     }
     private suspend fun loadFromCache(type: SimulationType): List<SimulationOption> {
         val key = if (type == SimulationType.BANCO) KEY_CACHE_BANCO else KEY_CACHE_CRIPTO
 
-        val jsonString = context.dataStoreCache.data.map { prefs ->
+        val jsonString = dataStore.data.map { prefs ->
             prefs[key] ?: ""
         }.first()
 

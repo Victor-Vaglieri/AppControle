@@ -5,16 +5,16 @@ import com.example.controledovitao.data.model.Payment
 import com.example.controledovitao.ui.adapter.ChartData
 import com.example.controledovitao.viewmodel.ReportItem // Importe o ReportItem que criamos
 import com.google.firebase.Firebase
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class ReportsRepository {
+class ReportsRepository(private val db: FirebaseFirestore = Firebase.firestore) {
 
-    private val db = Firebase.firestore
-    private val collection = db.collection("payment_methods")
+    private val collection get() = db.collection("payment_methods")
 
     fun listenToChartsData(onUpdate: (List<ChartData>) -> Unit) {
         collection.addSnapshotListener { snapshot, error ->

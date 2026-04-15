@@ -8,8 +8,8 @@ import com.google.firebase.firestore.toObject
 
 object PaymentRepository {
 
-    private val db = Firebase.firestore
-    private val collection = db.collection("payment_methods")
+    private val db get() = Firebase.firestore
+    private val collection get() = db.collection("payment_methods")
 
     fun listenToMethods(onUpdate: (List<Payment>) -> Unit) {
         collection.addSnapshotListener { snapshot, error ->

@@ -5,14 +5,14 @@ import com.example.controledovitao.data.model.Options
 import com.example.controledovitao.data.model.Payment
 import com.example.controledovitao.data.model.Spent
 import com.google.firebase.Firebase
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
 import java.math.BigDecimal
 
-class SpentRepository {
+class SpentRepository(private val db: FirebaseFirestore = Firebase.firestore) {
 
-    private val db = Firebase.firestore
-    private val collection = db.collection("payment_methods")
+    private val collection get() = db.collection("payment_methods")
 
     fun saveExpense(
         title: String,

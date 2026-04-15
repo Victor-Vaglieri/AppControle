@@ -8,9 +8,9 @@ import com.google.firebase.firestore.firestore
 
 object AuthRepository {
 
-    private val auth: FirebaseAuth = Firebase.auth
-    private val db = Firebase.firestore
-    private val usersCollection = db.collection("users")
+    private val auth: FirebaseAuth get() = Firebase.auth
+    private val db get() = Firebase.firestore
+    private val usersCollection get() = db.collection("users")
 
     fun login(loginInput: String, pass: String, onResult: (Boolean, String?) -> Unit) {
         if (loginInput.isBlank() || pass.isBlank()) {

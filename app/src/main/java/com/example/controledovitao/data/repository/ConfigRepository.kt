@@ -14,12 +14,14 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.flow.first
 
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+private val Context.settingsDataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
-class ConfigRepository(private val context: Context) {
-
-    private val auth = FirebaseAuth.getInstance()
-    private val db = FirebaseFirestore.getInstance()
+class ConfigRepository(
+    private val context: Context,
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance(),
+    private val db: FirebaseFirestore = FirebaseFirestore.getInstance(),
+    private val dataStore: DataStore<Preferences> = context.settingsDataStore
+) {
 
     companion object {
         val THEME_KEY = booleanPreferencesKey("theme_dark")
@@ -42,7 +44,7 @@ class ConfigRepository(private val context: Context) {
     }
 
     suspend fun getBiometricEnabled(): Boolean {
-        val preferences = context.dataStore.data.first()
+        val preferences = dataStore.data.first()
         return preferences[BIOMETRIC_KEY] ?: false
     }
     fun getProfileImage(): Uri? {
@@ -53,37 +55,37 @@ class ConfigRepository(private val context: Context) {
         return auth.currentUser?.email ?: ""
     }
 
-    val isThemeDark: Flow<Boolean> = context.dataStore.data
+    val isThemeDark: Flow<Boolean> = dataStore.data
         .map { preferences -> preferences[THEME_KEY] ?: false }
 
     suspend fun saveThemePreference(isEnabled: Boolean) {
-        context.dataStore.edit { preferences ->
+        dataStore.edit { preferences ->
             preferences[THEME_KEY] = isEnabled
         }
     }
 
-    val isBackupEnabled: Flow<Boolean> = context.dataStore.data
+    val isBackupEnabled: Flow<Boolean> = dataStore.data
         .map { preferences -> preferences[BACKUP_KEY] ?: true }
 
     suspend fun saveBackupPreference(isEnabled: Boolean) {
-        context.dataStore.edit { preferences ->
+        dataStore.edit { preferences ->
             preferences[BACKUP_KEY] = isEnabled
         }
     }
 
-    val isBiometricEnabled: Flow<Boolean> = context.dataStore.data
+    val isBiometricEnabled: Flow<Boolean> = dataStore.data
         .map { preferences -> preferences[BIOMETRIC_KEY] ?: false }
 
     suspend fun saveBiometricPreference(isEnabled: Boolean) {
-        context.dataStore.edit { preferences ->
+        dataStore.edit { preferences ->
             preferences[BIOMETRIC_KEY] = isEnabled
         }
     }
-    val isDataCollectionEnabled: Flow<Boolean> = context.dataStore.data
+    val isDataCollectionEnabled: Flow<Boolean> = dataStore.data
         .map { preferences -> preferences[DATA_KEY] ?: true }
 
     suspend fun saveDataCollectionPreference(isEnabled: Boolean) {
-        context.dataStore.edit { preferences ->
+        dataStore.edit { preferences ->
             preferences[DATA_KEY] = isEnabled
         }
     }
